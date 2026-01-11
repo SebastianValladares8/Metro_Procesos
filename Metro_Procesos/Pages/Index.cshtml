@@ -1,0 +1,34 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Metro de Quito - Login";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5 card shadow p-4 rounded">
+            
+            <h2 class="text-center mb-4">Iniciar sesión</h2>
+            
+            <div class="mb-3">
+                <label class="form-label">Correo electrónico</label>
+                <input type="email" class="form-control" placeholder="usuario@correo.com">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Contraseña</label>
+                <input type="password" class="form-control">
+            </div>
+
+            <div class="d-grid gap-2">
+                <a asp-page="/Usuario" class="btn btn-primary">Iniciar sesión</a>
+
+                <a asp-page="/Recuperar" class="btn btn-outline-secondary">Recuperar contraseña</a>
+
+                <a asp-page="/Registro" class="btn btn-light text-primary">Registrarse</a>
+            </div>
+            
+
+        </div>
+    </div>
+</div>
