@@ -1,16 +1,43 @@
 ﻿@page
 @model Metro_Procesos.Pages.recuperarModel
+
 <div class="container mt-5 text-center">
-    <div class="card p-4 mx-auto shadow-sm" style="max-width: 400px;">
-        <h3>Recuperar cuenta</h3>
-        <div class="mt-4 mb-3">
-            <label>Correo electrónico</label>
-            <input type="email" class="form-control text-center">
+    <div class="card p-4 mx-auto shadow-lg rounded"
+         style="max-width: 420px; background-color:#ffffff; border-top:8px solid #e60000;">
+
+        <!-- Botón pequeño en esquina superior izquierda con imagen -->
+        <div style="position:absolute; top:10px; left:10px;">
+            <a href="javascript:window.history.back();"
+               class="d-inline-block">
+                <img src="https://i.pinimg.com/564x/35/b3/c1/35b3c1ecf233d242dc8d504203eebeec.jpg"
+                     alt="Volver"
+                     class="img-fluid rounded-circle shadow-sm"
+                     style="width:40px; height:40px; cursor:pointer;">
+            </a>
         </div>
+
+
+        <!-- Encabezado -->
+        <h3 class="text-danger fw-bold mb-4">Recuperar cuenta</h3>
+
+        <!-- Campo correo -->
+        <div class="mt-3 mb-3">
+            <label class="fw-semibold text-danger">Correo electrónico</label>
+            <input type="email" class="form-control text-center border-danger"
+                   placeholder="usuario@correo.com">
+        </div>
+
+        <!-- Campo pin -->
         <div class="mb-4">
-            <label>Pin</label>
-            <input type="text" class="form-control text-center" placeholder="_ _ _ _">
+            <label class="fw-semibold text-danger">Pin</label>
+            <input type="text" class="form-control text-center border-danger"
+                   placeholder="_ _ _ _">
         </div>
-        <button class="btn btn-primary w-100">Enviar código</button>
+
+        <!-- Botón principal -->
+        <button class="btn w-100 fw-bold"
+                style="background-color:#e60000; color:#fff;">
+            Enviar código
+        </button>
     </div>
 </div>

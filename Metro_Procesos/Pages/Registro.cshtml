@@ -1,26 +1,49 @@
 ﻿@page
 @model Metro_Procesos.Pages.RegistroModel
+
 <div class="container mt-4">
-    <div class="card shadow p-4 mx-auto" style="max-width: 600px;">
-        <h2 class="text-center">Registro de Usuario</h2>
-        <div class="row">
-            <div class="col-md-12 mb-3">
-                <label>Nombre completo</label>
-                <input type="text" class="form-control">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label>Número del documento</label>
-                <input type="text" class="form-control">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label>Código dactilar</label>
-                <input type="text" class="form-control">
-            </div>
-            <div class="col-md-12 mb-3">
-                <label>Contraseña</label>
-                <input type="password" class="form-control">
-            </div>
+    <div class="card shadow-lg p-4 mx-auto rounded"
+         style="max-width: 600px; background-color:#ffffff; border-top:8px solid #e60000;">
+
+        <!-- Botón pequeño en esquina superior izquierda con imagen -->
+        <div style="position:absolute; top:10px; left:10px;">
+            <a href="javascript:window.history.back();"
+               class="d-inline-block">
+                <img src="https://i.pinimg.com/564x/35/b3/c1/35b3c1ecf233d242dc8d504203eebeec.jpg"
+                     alt="Volver"
+                     class="img-fluid rounded-circle shadow-sm"
+                     style="width:40px; height:40px; cursor:pointer;">
+            </a>
         </div>
-        <button class="btn btn-success w-100">Finalizar Registro</button>
+
+
+        <!-- Encabezado -->
+        <h2 class="text-center text-danger fw-bold mb-4">Registro de Usuario</h2>
+
+        <!-- Formulario -->
+        <form method="post">
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label class="fw-semibold text-danger">Correo Electrónico</label>
+                    <input type="email" class="form-control border-danger" placeholder="usuario@correo.com" name="Correo">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="fw-semibold text-danger">Número del documento</label>
+                    <input type="text" class="form-control border-danger" placeholder="Ej: 0102030405" name="Documento">
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <label class="fw-semibold text-danger">Contraseña</label>
+                    <input type="password" class="form-control border-danger" placeholder="********" name="Password">
+                </div>
+            </div>
+
+            <!-- Botón principal -->
+            <button type="submit" class="btn w-100 mt-3"
+                    style="background-color:#e60000; color:#fff; font-weight:bold;">
+                Finalizar Registro
+            </button>
+        </form>
     </div>
 </div>

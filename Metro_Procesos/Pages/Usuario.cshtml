@@ -1,14 +1,42 @@
 ﻿@page
 @model Metro_Procesos.Pages.UsuarioModel
+
 <div class="container mt-4">
-    <div class="card p-4 bg-light shadow-sm">
-        <h4>Bienvenido al Metro de Quito</h4>
-        <p>Nombre del usuario: <strong>(Pendiente conexión)</strong></p>
-        <p>Saldo disponible: <span class="badge bg-success">$0.00</span></p>
+    <div class="card p-4 shadow-lg rounded" style="background-color:#ffffff; border-top:8px solid #e60000;">
+
+        <!-- Encabezado -->
+        <h3 class="text-center text-danger fw-bold mb-3">Bienvenido al Metro de Quito</h3>
+
+        <p class="text-center">
+            Nombre del usuario: <strong class="text-secondary">(Pendiente conexión)</strong>
+        </p>
+        <p class="text-center">
+            Saldo disponible: <span class="badge bg-success fs-6">$0.00</span>
+        </p>
+
+        <!-- Botones -->
         <hr>
-        <div>
-            <a asp-page="/CompraSaldo" class="btn btn-outline-primary">Compra boleto</a>
-            <a asp-page="/CompraSaldo" class="btn btn-outline-success">Recarga Saldo</a>
+        <div class="d-flex justify-content-center gap-3">
+            <a asp-page="/CompraBoleto"
+               class="btn"
+               style="background-color:#e60000; color:#fff; font-weight:bold;">
+                Comprar boleto
+            </a>
+
+            <a asp-page="/RecargaSaldo"
+               class="btn btn-outline-danger fw-semibold">
+                Recargar saldo
+            </a>
+        </div>
+
+        <!-- Mapa de estaciones -->
+        <hr>
+        <h5 class="mt-4 text-danger fw-bold text-center">Mapa de estaciones</h5>
+        <div class="text-center mt-3">
+            <img src="https://metro-quito.com/wp-content/uploads/paradas-metro-quito-2.jpg"
+                 alt="Mapa de estaciones Metro de Quito"
+                 class="img-fluid rounded shadow-sm border border-danger"
+                 style="max-width:800px;" />
         </div>
     </div>
 </div>

@@ -1,0 +1,66 @@
+﻿@page
+@model Metro_Procesos.Pages.RecargaSaldoModel
+@{
+    ViewData["Title"] = "Metro de Quito - Métodos de Recarga";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg p-4 mx-auto rounded"
+         style="max-width:700px; background-color:#ffffff; border-top:8px solid #e60000;">
+
+        <!-- Botón pequeño en esquina superior izquierda con imagen -->
+        <div style="position:absolute; top:10px; left:10px;">
+            <a href="javascript:window.history.back();"
+               class="d-inline-block">
+                <img src="https://i.pinimg.com/564x/35/b3/c1/35b3c1ecf233d242dc8d504203eebeec.jpg"
+                     alt="Volver"
+                     class="img-fluid rounded-circle shadow-sm"
+                     style="width:40px; height:40px; cursor:pointer;">
+            </a>
+        </div>
+
+
+        <!-- Encabezado -->
+        <h2 class="text-center text-danger fw-bold mb-4">Seleccione su Método de Pago</h2>
+
+        <form method="post">
+            <div class="row text-center">
+
+
+                <!-- Opción Transferencia -->
+                <div class="col-md-4 mb-4">
+                    <img src="https://cdn.worldvectorlogo.com/logos/banco-pichincha-nuevo-logo-fondo-amarillo.svg"
+                         alt="Transferencia"
+                         class="img-fluid rounded shadow-sm mb-2"
+                         style="max-height:120px;">
+                    <div class="form-check">
+                        <input class="form-check-input border-danger" type="radio" name="Metodo" value="Transferencia" id="transferencia">
+                        <label class="form-check-label fw-semibold text-danger" for="transferencia">
+                            Transferencia
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Opción PayPal -->
+                <div class="col-md-4 mb-4">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT10jPbjVDIpH0JwwSQKOWsNJYt7DJZYGXJkw&s"
+                         alt="PayPal"
+                         class="img-fluid rounded shadow-sm mb-2"
+                         style="max-height:120px;">
+                    <div class="form-check">
+                        <input class="form-check-input border-danger" type="radio" name="Metodo" value="Paypal" id="paypal">
+                        <label class="form-check-label fw-semibold text-danger" for="paypal">
+                            PayPal
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botón principal -->
+            <button type="submit" class="btn w-100 fw-bold mt-4"
+                    style="background-color:#e60000; color:#fff;">
+                Confirmar Método de Pago
+            </button>
+        </form>
+    </div>
+</div>
