@@ -6,29 +6,34 @@
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-5 card shadow p-4 rounded">
-            
-            <h2 class="text-center mb-4">Iniciar sesión</h2>
-            
+        <div class="col-md-5 card shadow p-4 rounded" style="background-color:#ffffff; border-top:8px solid #e60000;">
+
+            <!-- Imagen superior -->
+            <div class="text-center mb-3">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStHdLUoa6oD5NevbIz_Ss9mJg6Siu03iy1MQ&s" alt="Logo Metro de Quito"
+                     class="img-fluid" style="max-height:120px;">
+            </div>
+
+            <h2 class="text-center mb-4 text-danger fw-bold">Iniciar sesión</h2>
+
             <div class="mb-3">
-                <label class="form-label">Correo electrónico</label>
-                <input type="email" class="form-control" placeholder="usuario@correo.com">
+                <label class="form-label text-danger fw-semibold">Correo electrónico</label>
+                <input type="email" class="form-control border-danger" placeholder="usuario@correo.com">
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Contraseña</label>
-                <input type="password" class="form-control">
+                <label class="form-label text-danger fw-semibold">Contraseña</label>
+                <input type="password" class="form-control border-danger">
             </div>
 
             <div class="d-grid gap-2">
-                <a asp-page="/Usuario" class="btn btn-primary">Iniciar sesión</a>
+                <a asp-page="/Usuario" class="btn"
+                   style="background-color:#e60000; color:#fff; font-weight:bold;">Iniciar sesión</a>
 
-                <a asp-page="/Recuperar" class="btn btn-outline-secondary">Recuperar contraseña</a>
+                <a asp-page="/Recuperar" class="btn btn-outline-danger fw-semibold">Recuperar contraseña</a>
 
-                <a asp-page="/Registro" class="btn btn-light text-primary">Registrarse</a>
+                <a asp-page="/Registro" class="btn btn-light text-danger fw-semibold border border-danger">Registrarse</a>
             </div>
-            
-
         </div>
     </div>
 </div>
