@@ -3,11 +3,12 @@
 
 <div class="container mt-4">
     <div class="card shadow-lg p-4 mx-auto rounded"
-         style="max-width: 600px; background-color:#ffffff; border-top:8px solid #e60000; position:relative;">
+         style="max-width: 600px; background-color:#ffffff; border-top:8px solid #e60000;">
 
-        <!-- Botón volver -->
+        <!-- Botón pequeño en esquina superior izquierda con imagen -->
         <div style="position:absolute; top:10px; left:10px;">
-            <a href="javascript:window.history.back();" class="d-inline-block">
+            <a href="javascript:window.history.back();"
+               class="d-inline-block">
                 <img src="https://i.pinimg.com/564x/35/b3/c1/35b3c1ecf233d242dc8d504203eebeec.jpg"
                      alt="Volver"
                      class="img-fluid rounded-circle shadow-sm"
@@ -15,36 +16,30 @@
             </a>
         </div>
 
+
+        <!-- Encabezado -->
         <h2 class="text-center text-danger fw-bold mb-4">Registro de Usuario</h2>
 
-        <!-- Mostrar errores -->
-        <div class="text-danger mb-2" asp-validation-summary="All"></div>
-
+        <!-- Formulario -->
         <form method="post">
             <div class="row">
                 <div class="col-md-12 mb-3">
                     <label class="fw-semibold text-danger">Correo Electrónico</label>
-                    <input asp-for="Usuario.Correo" type="email"
-                           class="form-control border-danger" placeholder="usuario@correo.com" />
-                    <span asp-validation-for="Usuario.Correo" class="text-danger"></span>
+                    <input type="email" class="form-control border-danger" placeholder="usuario@correo.com" name="Correo">
                 </div>
 
                 <div class="col-md-6 mb-3">
                     <label class="fw-semibold text-danger">Número del documento</label>
-                    <input asp-for="Usuario.Cedula" type="text"
-                           class="form-control border-danger" placeholder="Ej: 0102030405" />
-                    <span asp-validation-for="Usuario.Cedula" class="text-danger"></span>
+                    <input type="text" class="form-control border-danger" placeholder="Ej: 0102030405" name="Documento">
                 </div>
 
                 <div class="col-md-12 mb-3">
                     <label class="fw-semibold text-danger">Contraseña</label>
-                    <!-- Por ahora se guarda tal cual en PasswordHash -->
-                    <input asp-for="Usuario.PasswordHash" type="password"
-                           class="form-control border-danger" placeholder="********" />
-                    <span asp-validation-for="Usuario.PasswordHash" class="text-danger"></span>
+                    <input type="password" class="form-control border-danger" placeholder="********" name="Password">
                 </div>
             </div>
 
+            <!-- Botón principal -->
             <button type="submit" class="btn w-100 mt-3"
                     style="background-color:#e60000; color:#fff; font-weight:bold;">
                 Finalizar Registro

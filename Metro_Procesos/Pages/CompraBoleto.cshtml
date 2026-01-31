@@ -1,5 +1,5 @@
 ﻿@page
-@model Metro_Procesos.Pages.CompraSaldoModel
+@model Metro_Procesos.Pages.MetodosPagoCompraModel
 @{
     ViewData["Title"] = "Metro de Quito - Comprar Boleto";
 }
@@ -38,15 +38,15 @@
 
             <!-- Botones -->
             <div class="d-grid gap-2 mt-4">
-                <a asp-page="/MetodosPagoCompra" 
-                   class="btn btn-lg fw-bold" 
+                <a asp-page="/MetodosPagoCompra"
+                   class="btn btn-lg fw-bold"
                    style="background-color:#e60000; color:#fff;">
                     Método de Pago
                 </a>
 
-                <a asp-page="/Usuario" 
-                    class="btn btn-outline-danger fw-semibold">
-                     Cancelar y volver
+                <a asp-page="/Usuario"
+                   class="btn btn-outline-danger fw-semibold">
+                    Cancelar y volver
                 </a>
             </div>
 

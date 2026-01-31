@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Metro_Procesos.Pages
 {
-    public class CompraSaldoModel : PageModel
+    public class CompraBoletoModel : PageModel
     {
         public void OnGet()
         {
