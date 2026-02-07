@@ -1,0 +1,68 @@
+﻿@* Directiva que define esta vista como una página de Razor *@
+@page
+
+@* Vincula esta vista con su clase de lógica (el archivo .cshtml.cs) *@
+@model Metro_Procesos.Pages.ConfirmarTransferenciaModel
+
+@{
+    @* Define el título de la pestaña en el navegador *@
+    ViewData["Title"] = "Confirmar Transferencia";
+}
+
+@* Contenedor principal con margen superior (mt-5) y centrado de texto *@
+<div class="container mt-5 text-center">
+    
+    @* Tarjeta visual con sombra (shadow), relleno (p-4) y borde superior amarillo personalizado *@
+    <div class="card shadow p-4 mx-auto" style="max-width: 500px; border-top: 5px solid #28a745;">
+        
+        @* Encabezado de la tarjeta con estilo negrita y color oscuro *@
+        <h2 class="text-dark fw-bold">Datos para Transferencia</h2>
+        
+        @* Subtítulo informativo con texto atenuado (muted) *@
+        <p class="text-muted">Banco Pichincha</p>
+        
+        @* Línea horizontal divisoria *@
+        <hr />
+        
+        @* Lista de datos bancarios con estilo limpio (list-group-flush) y alineada a la izquierda *@
+        <ul class="list-group list-group-flush text-start mb-4">
+            <li class="list-group-item"><strong>Tipo de Cuenta:</strong> Ahorros</li>
+            <li class="list-group-item"><strong>Número de Cuenta:</strong> 2201234567</li>
+            <li class="list-group-item"><strong>Beneficiario:</strong> Metro de Quito S.A.</li>
+        </ul>
+
+        @* Inicio del formulario que envía los datos mediante el método POST al servidor *@
+        <form method="post" class="text-start">
+            
+            @* Grupo de entrada para el Monto *@
+            <div class="mb-3">
+                <label class="form-label fw-bold">Monto a Recargar ($):</label>
+                @* Input numérico vinculado a la propiedad 'Monto' del modelo. 
+                   step="0.01" permite decimales y min="0.50" valida el monto mínimo *@
+                <input type="number" asp-for="Monto" class="form-control" step="0.01" min="0.50" placeholder="0.00" required>
+                @* Texto de ayuda debajo del input *@
+                <div class="form-text">Mínimo $0.50</div>
+            </div>
+
+            @* Grupo de entrada para el Número de Comprobante *@
+            <div class="mb-3">
+                <label class="form-label fw-bold">Número de Comprobante:</label>
+                @* Input de texto vinculado a la propiedad 'Referencia'. 
+                   'required' obliga al usuario a llenar el campo antes de enviar *@
+                <input type="text" asp-for="Referencia" class="form-control" placeholder="Ej: 987654321" required>
+            </div>
+
+            @* Cuadro de alerta azul con información sobre el tiempo de acreditación *@
+            <div class="alert alert-info py-2" style="font-size: 0.85rem;">
+                <strong>Nota:</strong> Su saldo se acreditará una vez que el banco confirme la transacción.
+            </div>
+
+            @* Botón de envío del formulario (tipo submit) *@
+            <button type="submit" class="btn btn-success w-100 fw-bold">Enviar Comprobante</button>
+            
+            @* Enlace para regresar a la página anterior sin enviar datos *@
+            <a href="/RecargaSaldo" class="btn btn-link w-100 mt-2 text-danger text-decoration-none">Cancelar</a>
+            
+        </form> @* Fin del formulario *@
+    </div>
+</div>

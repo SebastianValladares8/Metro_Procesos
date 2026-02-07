@@ -1,0 +1,29 @@
+﻿@page
+@model Metro_Procesos.Pages.ConfirmarCuentaCiudadModel
+@{
+    ViewData["Title"] = "Pago con Cuenta Ciudad";
+}
+
+<div class="container mt-5 text-center">
+    <div class="card shadow p-4 mx-auto" style="max-width: 500px; border-top: 5px solid #e60000;">
+        <h2 class="text-danger fw-bold">Cuenta Ciudad</h2>
+        <p class="text-muted">Paga utilizando tu saldo acumulado del Metro</p>
+        <hr />
+
+        <form method="post" class="text-start">
+            <div class="mb-3">
+                <label class="form-label fw-bold">Monto a descontar ($):</label>
+                <input type="text" class="form-control form-control-lg" value="" readonly>
+            </div>
+
+            <div class="alert alert-info py-2" style="font-size: 0.85rem;">
+                El valor <strong></strong> se debitará de su saldo actual inmediatamente.
+            </div>
+
+            <button type="submit" class="btn btn-danger w-100 fw-bold py-2">
+                Confirmar y Generar Boleto
+            </button>
+            <a href="javascript:window.history.back();" class="btn btn-link w-100 mt-2 text-decoration-none text-muted">Cancelar</a>
+        </form>
+    </div>
+</div>kj

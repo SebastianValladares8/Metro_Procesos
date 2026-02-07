@@ -1,0 +1,30 @@
+﻿@page
+@model Metro_Procesos.Pages.ProcesarPaypalModel
+@{
+    ViewData["Title"] = "Pago con PayPal";
+}
+
+<div class="container mt-5 text-center">
+    <div class="card shadow p-4 mx-auto" style="max-width: 500px; border-top: 5px solid #0070ba;">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT10jPbjVDIpH0JwwSQKOWsNJYt7DJZYGXJkw&s" 
+             style="height: 60px; object-fit: contain;" class="mb-3">
+        <h2 class="fw-bold" style="color: #003087;">Pago Seguro</h2>
+        
+        <form method="post" class="text-start mt-4">
+            <div class="mb-3">
+                <label class="form-label fw-bold">Monto a Recargar ($):</label>
+                <input type="number" asp-for="Monto" class="form-control form-control-lg" step="0.01" min="1.00" placeholder="0.00" required>
+                <div class="form-text">Mínimo para PayPal: $1.00</div>
+            </div>
+
+            <div class="alert alert-secondary py-2" style="font-size: 0.85rem;">
+                Al hacer clic en el botón, serás redirigido a la plataforma segura de PayPal para autorizar el pago.
+            </div>
+            
+            <button type="submit" class="btn btn-primary w-100 fw-bold py-2" style="background-color: #0070ba; border: none;">
+                Continuar con PayPal
+            </button>
+            <a href="/RecargaSaldo" class="btn btn-link w-100 mt-2 text-decoration-none text-muted">Cancelar</a>
+        </form>
+    </div>
+</div>
