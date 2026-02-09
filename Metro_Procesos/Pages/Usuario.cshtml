@@ -11,16 +11,16 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
-
+    
     <div class="card p-4 shadow-lg rounded" style="background-color:#ffffff; border-top:8px solid #e60000;">
 
         <h3 class="text-center text-danger fw-bold mb-3">Bienvenido al Metro de Quito</h3>
 
         <p class="text-center">
-            Nombre del usuario: <strong class="text-secondary">Usuario Invitado</strong>
+            Nombre del usuario: <strong class="text-secondary">@(Model.DatosUsuario?.Nombre ?? "Usuario")</strong>
         </p>
         <p class="text-center">
-            Saldo disponible: <span class="badge bg-success fs-6">$0.00</span>
+            Saldo disponible: <span class="badge bg-success fs-6">@Model.DatosUsuario?.Saldo.ToString("C2")</span>
         </p>
 
         <hr>

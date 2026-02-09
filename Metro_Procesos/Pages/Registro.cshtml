@@ -22,20 +22,24 @@
 
         <!-- Formulario -->
         <form method="post">
+            <div class="mb-3">
+                <label class="form-label text-danger fw-semibold">Nombre Completo</label>
+                <input type="text" asp-for="Usuario.Nombre" class="form-control border-danger" placeholder="Ej: Sebastián Pérez" required>
+            </div>
             <div class="row">
                 <div class="col-md-12 mb-3">
                     <label class="fw-semibold text-danger">Correo Electrónico</label>
-                    <input type="email" class="form-control border-danger" placeholder="usuario@correo.com" name="Correo">
+                    <input type="email" class="form-control border-danger" placeholder="usuario@correo.com" asp-for="Usuario.Correo" required>
                 </div>
 
                 <div class="col-md-6 mb-3">
                     <label class="fw-semibold text-danger">Número del documento</label>
-                    <input type="text" class="form-control border-danger" placeholder="Ej: 0102030405" name="Documento">
+                    <input type="text" class="form-control border-danger" placeholder="Ej: 0102030405" asp-for="Usuario.Cedula" required>
                 </div>
 
                 <div class="col-md-12 mb-3">
                     <label class="fw-semibold text-danger">Contraseña</label>
-                    <input type="password" class="form-control border-danger" placeholder="********" name="Password">
+                    <input type="password" class="form-control border-danger" placeholder="********" asp-for="Usuario.Contrasena" required>
                 </div>
             </div>
 

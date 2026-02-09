@@ -9,31 +9,35 @@
         <div class="col-md-5 card shadow p-4 rounded" style="background-color:#ffffff; border-top:8px solid #e60000;">
 
             <!-- Imagen superior -->
-            <div class="text-center mb-3">
+            <div class="text-center mb-3222">
                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStHdLUoa6oD5NevbIz_Ss9mJg6Siu03iy1MQ&s" alt="Logo Metro de Quito"
                      class="img-fluid" style="max-height:120px;">
             </div>
 
             <h2 class="text-center mb-4 text-danger fw-bold">Iniciar sesión</h2>
 
-            <div class="mb-3">
-                <label class="form-label text-danger fw-semibold">Correo electrónico</label>
-                <input type="email" class="form-control border-danger" placeholder="usuario@correo.com">
-            </div>
+           
 
-            <div class="mb-3">
-                <label class="form-label text-danger fw-semibold">Contraseña</label>
-                <input type="password" class="form-control border-danger">
-            </div>
+            <form method="post">
+                <div class="mb-3">
+                    <label class="form-label text-danger fw-semibold">Correo electrónico</label>
+                    <input type="email" asp-for="Correo" class="form-control border-danger" placeholder="usuario@correo.com" required>
+                </div>
 
-            <div class="d-grid gap-2">
-                <a asp-page="/Usuario" class="btn"
-                   style="background-color:#e60000; color:#fff; font-weight:bold;">Iniciar sesión</a>
+                <div class="mb-3">
+                    <label class="form-label text-danger fw-semibold">Contraseña</label>
+                    <input type="password" asp-for="Contrasena" class="form-control border-danger" required>
+                </div>
 
-                <a asp-page="/Recuperar" class="btn btn-outline-danger fw-semibold">Recuperar contraseña</a>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn" style="background-color:#e60000; color:#fff; font-weight:bold;">
+                        Iniciar sesión
+                    </button>
 
-                <a asp-page="/Registro" class="btn btn-light text-danger fw-semibold border border-danger">Registrarse</a>
-            </div>
+                    <a asp-page="/Recuperar" class="btn btn-outline-danger fw-semibold">Recuperar contraseña</a>
+                    <a asp-page="/Registro" class="btn btn-light text-danger fw-semibold border border-danger">Registrarse</a>
+                </div>
+            </form>
         </div>
     </div>
 </div>

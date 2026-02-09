@@ -9,35 +9,46 @@ namespace Metro_Procesos.Pages
     {
         private readonly AppDbContext _context;
 
+        // Constructor para conectar con la base de datos
         public RegistroModel(AppDbContext context)
         {
             _context = context;
         }
 
-        // Esto permite que el form llene Usuario automáticamente
+        // Esta propiedad se conecta con el 'asp-for' de tu HTML
         [BindProperty]
         public Usuario Usuario { get; set; } = new Usuario();
 
         public void OnGet()
         {
+            // Se ejecuta al cargar la página por primera vez
         }
 
         public IActionResult OnPost()
         {
-            // Validación mínima (puedes mejorar luego)
-            if (string.IsNullOrWhiteSpace(Usuario.Correo) ||
-                string.IsNullOrWhiteSpace(Usuario.Cedula) ||
-                string.IsNullOrWhiteSpace(Usuario.PasswordHash))
+            // 1. Verificamos que el formulario esté bien lleno
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError(string.Empty, "Completa todos los campos.");
                 return Page();
             }
 
-            // Guardar en BD
-            _context.Usuarios.Add(Usuario);
-            _context.SaveChanges();
+            try
+            {
+                // 2. Agregamos el usuario (que ya trae el Nombre, Correo, Cedula y Contrasena)
+                _context.usuario.Add(Usuario);
 
-            return RedirectToPage("/Index");
+                // 3. Guardamos los cambios en SQL Server
+                _context.SaveChanges();
+
+                // 4. Si todo sale bien, lo mandamos al Login para que entre
+                return RedirectToPage("/Index");
+            }
+            catch (Exception ex)
+            {
+                // Si hay un error (ej. correo duplicado), lo mostramos en pantalla
+                ModelState.AddModelError(string.Empty, "Hubo un error al registrar: " + ex.Message);
+                return Page();
+            }
         }
     }
 }

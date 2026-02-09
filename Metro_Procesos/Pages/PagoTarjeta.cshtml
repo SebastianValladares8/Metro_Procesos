@@ -1,0 +1,63 @@
+﻿@page
+@model Metro_Procesos.Pages.PagoTarjetaModel
+@{
+    ViewData["Title"] = "Pago con Tarjeta - Metro de Quito";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-lg p-4 rounded" style="background-color:#ffffff; border-top:8px solid #e60000;">
+
+                <h2 class="text-center text-danger fw-bold mb-4">Datos de Pago</h2>
+
+                <div class="bg-dark text-white p-3 rounded mb-4 shadow-sm" style="background: linear-gradient(45deg, #1a1a1a, #4d4d4d);">
+                    <div class="d-flex justify-content-between mb-4">
+                        <i class="bi bi-chip fs-2 text-warning"></i>
+                        <span class="fw-bold italic">VISA / MASTERCARD</span>
+                    </div>
+                    <div class="fs-4 text-center mb-3">**** **** **** ****</div>
+                    <div class="d-flex justify-content-between small">
+                        <span>NOMBRE DEL TITULAR</span>
+                        <span>MM/AA</span>
+                    </div>
+                </div>
+
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-danger">Nombre en la tarjeta</label>
+                        <input type="text" class="form-control border-danger" placeholder="Ej: JUAN PEREZ" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-danger">Número de tarjeta</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-danger"><i class="bi bi-credit-card-2-front"></i></span>
+                            <input type="text" class="form-control border-danger" placeholder="0000 0000 0000 0000" maxlength="16" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label class="form-label fw-semibold text-danger">Expiración</label>
+                            <input type="text" class="form-control border-danger" placeholder="MM/AA" maxlength="5" required>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label fw-semibold text-danger">CVV</label>
+                            <input type="password" class="form-control border-danger" placeholder="123" maxlength="3" required>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-lg fw-bold" style="background-color:#e60000; color:#fff;">
+                            Pagar Ahora
+                        </button>
+                        <a asp-page="/MetodosPagoCompra" class="btn btn-outline-secondary fw-semibold">
+                            Volver
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
