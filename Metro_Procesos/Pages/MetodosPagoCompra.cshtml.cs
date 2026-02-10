@@ -5,30 +5,36 @@ namespace Metro_Procesos.Pages
 {
     public class MetodosPagoCompraModel : PageModel
     {
+        // Esta propiedad se enlaza con el asp-for="Metodo" de tu HTML
         [BindProperty]
         public string Metodo { get; set; }
 
         public void OnGet()
         {
-            // Opción por defecto
-            Metodo = "CuentaCiudad";
+            // Opcional: dejamos Transferencia marcada por defecto
+            Metodo = "Transferencia";
         }
 
         public IActionResult OnPost()
         {
+            // Si el usuario no seleccionó nada (aunque pusiste 'required'), volvemos a cargar
             if (string.IsNullOrEmpty(Metodo))
             {
                 return Page();
             }
 
-            // Aquí es donde "llamamos" a las otras clases/páginas
-            return Metodo switch
+            // REDIRECCIÓN PURA:
+            // Aquí NO procesamos dinero, solo saltamos de página
+            if (Metodo == "Transferencia")
             {
-                "CuentaCiudad" => RedirectToPage("/ConfirmarCuentaCiudad"),
-                "Transferencia" => RedirectToPage("/ConfirmarTransferencia"),
-                "Paypal" => RedirectToPage("/ProcesarPaypal"),
-                _ => Page(),
-            };
+                return RedirectToPage("/ConfirmarTransferencia");
+            }
+            else if (Metodo == "Tarjeta")
+            {
+                return RedirectToPage("/PagoTarjeta");
+            }
+
+            return Page();
         }
     }
 }

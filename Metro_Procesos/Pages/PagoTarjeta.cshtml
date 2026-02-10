@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Pago con Tarjeta - Metro de Quito";
 }
-
+<h1>hola</h1>
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
@@ -47,7 +47,16 @@
                             <input type="password" class="form-control border-danger" placeholder="123" maxlength="3" required>
                         </div>
                     </div>
-
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-danger">Monto a recargar ($)</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-danger"><i class="bi bi-cash-stack"></i></span>
+                            @* Vinculamos con la propiedad Monto del C# *@
+                            <input type="number" asp-for="Monto" class="form-control border-danger"
+                                   placeholder="0.00" step="0.01" min="1" required>
+                        </div>
+                        <div class="form-text text-muted">Monto mínimo de recarga: $1.00</div>
+                    </div>
                     <div class="d-grid gap-2 mt-4">
                         <button type="submit" class="btn btn-lg fw-bold" style="background-color:#e60000; color:#fff;">
                             Pagar Ahora
