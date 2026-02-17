@@ -1,68 +1,88 @@
-﻿@* Directiva que define esta vista como una página de Razor *@
-@page
-
-@* Vincula esta vista con su clase de lógica (el archivo .cshtml.cs) *@
+﻿@page
 @model Metro_Procesos.Pages.ConfirmarTransferenciaModel
-
 @{
-    @* Define el título de la pestaña en el navegador *@
-    ViewData["Title"] = "Confirmar Transferencia";
+    ViewData["Title"] = "Confirmar Pago - Metro de Quito";
 }
 
-@* Contenedor principal con margen superior (mt-5) y centrado de texto *@
-<div class="container mt-5 text-center">
-    
-    @* Tarjeta visual con sombra (shadow), relleno (p-4) y borde superior amarillo personalizado *@
-    <div class="card shadow p-4 mx-auto" style="max-width: 500px; border-top: 5px solid #28a745;">
-        
-        @* Encabezado de la tarjeta con estilo negrita y color oscuro *@
-        <h2 class="text-dark fw-bold">Datos para Transferencia</h2>
-        
-        @* Subtítulo informativo con texto atenuado (muted) *@
-        <p class="text-muted">Banco Pichincha</p>
-        
-        @* Línea horizontal divisoria *@
-        <hr />
-        
-        @* Lista de datos bancarios con estilo limpio (list-group-flush) y alineada a la izquierda *@
-        <ul class="list-group list-group-flush text-start mb-4">
-            <li class="list-group-item"><strong>Tipo de Cuenta:</strong> Ahorros</li>
-            <li class="list-group-item"><strong>Número de Cuenta:</strong> 2201234567</li>
-            <li class="list-group-item"><strong>Beneficiario:</strong> Metro de Quito S.A.</li>
-        </ul>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            @* Lógica para mostrar formulario o boleto generado *@
+            @if (string.IsNullOrEmpty(Model.QrCodeImage))
+            {
+                <div class="card shadow-lg p-4 rounded" style="border-top:8px solid #e60000;">
+                    <h2 class="text-center mb-4 text-danger fw-bold">Confirmación de Transferencia</h2>
 
-        @* Inicio del formulario que envía los datos mediante el método POST al servidor *@
-        <form method="post" class="text-start">
-            
-            @* Grupo de entrada para el Monto *@
-            <div class="mb-3">
-                <label class="form-label fw-bold">Monto a Recargar ($):</label>
-                @* Input numérico vinculado a la propiedad 'Monto' del modelo. 
-                   step="0.01" permite decimales y min="0.50" valida el monto mínimo *@
-                <input type="number" asp-for="Monto" class="form-control" step="0.01" min="0.50" placeholder="0.00" required>
-                @* Texto de ayuda debajo del input *@
-                <div class="form-text">Mínimo $0.50</div>
-            </div>
+                    <div class="alert alert-secondary small mb-4">
+                        <h6 class="fw-bold"><i class="bi bi-bank"></i> Datos para la Transferencia:</h6>
+                        <p class="mb-1"><strong>Banco:</strong> Banco Pichincha (Cta. Corriente)</p>
+                        <p class="mb-1"><strong>Número:</strong> 2100012345</p>
+                        <p class="mb-1"><strong>Beneficiario:</strong> Metro de Quito EP</p>
+                        <p class="mb-0"><strong>RUC:</strong> 1768154260001</p>
+                    </div>
 
-            @* Grupo de entrada para el Número de Comprobante *@
-            <div class="mb-3">
-                <label class="form-label fw-bold">Número de Comprobante:</label>
-                @* Input de texto vinculado a la propiedad 'Referencia'. 
-                   'required' obliga al usuario a llenar el campo antes de enviar *@
-                <input type="text" asp-for="Referencia" class="form-control" placeholder="Ej: 987654321" required>
-            </div>
+                    <form method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Monto a Pagar ($)</label>
+                            <input asp-for="Monto" class="form-control" value="0.45" readonly />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Número de Referencia / Comprobante</label>
+                            <input asp-for="Referencia" class="form-control" placeholder="Ej: 123456789" required />
+                            <div class="form-text">Ingrese el número que aparece en su comprobante bancario.</div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg fw-bold">Validar y Generar QR</button>
+                            <a asp-page="/MetodosPagoCompra" class="btn btn-outline-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            }
+            else
+            {
+                <div id="ticket-metro" class="mx-auto shadow-lg mb-4" style="max-width: 350px; background: #fff; border-radius: 20px; overflow: hidden; border: 1px solid #eee;">
+                    <div style="background-color: #e60000; padding: 20px; color: white; text-align: center;">
+                        <h4 class="mb-0 fw-bold">METRO DE QUITO</h4>
+                        <p class="small mb-0 opacity-75">SISTEMA DE TRANSPORTE MUNICIPAL</p>
+                    </div>
 
-            @* Cuadro de alerta azul con información sobre el tiempo de acreditación *@
-            <div class="alert alert-info py-2" style="font-size: 0.85rem;">
-                <strong>Nota:</strong> Su saldo se acreditará una vez que el banco confirme la transacción.
-            </div>
+                    <div class="p-4 text-center">
+                        <div class="mb-3">
+                            <img src="@Model.QrCodeImage" class="img-thumbnail" style="width: 200px; border: none;" />
+                        </div>
 
-            @* Botón de envío del formulario (tipo submit) *@
-            <button type="submit" class="btn btn-success w-100 fw-bold">Enviar Comprobante</button>
-            
-            @* Enlace para regresar a la página anterior sin enviar datos *@
-            <a href="/RecargaSaldo" class="btn btn-link w-100 mt-2 text-danger text-decoration-none">Cancelar</a>
-            
-        </form> @* Fin del formulario *@
+                        <div class="text-start border-top pt-3 mt-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted small">PASAJERO:</span>
+                                <span class="fw-bold small text-uppercase">@Model.UsuarioNombre</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted small">REFERENCIA:</span>
+                                <span class="fw-bold small">@Model.Referencia</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted small">FECHA:</span>
+                                <span class="fw-bold small">@DateTime.Now.ToString("dd/MM/yyyy HH:mm")</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted small">TIPO:</span>
+                                <span class="fw-bold text-danger small">TICKET SENCILLO - $0.45</span>
+                            </div>
+                        </div>
+
+                        <div class="my-3" style="border-top: 2px dashed #ddd;"></div>
+                        <p class="text-muted mb-0" style="font-size: 0.65rem;">Escanee este código en los validadores de la estación.</p>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 mx-auto" style="max-width: 350px;">
+                    @* LÍNEA CORREGIDA PARA EVITAR ERROR CS1061 *@
+                    <a href="@Model.QrCodeImage" download="Boleto_Metro_Quito_@(Model.Referencia).png" class="btn btn-danger btn-lg fw-bold">Descargar Boleto</a>
+
+                    <button onclick="window.print()" class="btn btn-outline-dark">Imprimir Ticket</button>
+                    <a asp-page="/Usuario" class="btn btn-link text-muted">Ir a mi Perfil</a>
+                </div>
+            }
+        </div>
     </div>
 </div>

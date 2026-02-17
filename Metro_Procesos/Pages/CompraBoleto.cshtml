@@ -6,50 +6,34 @@
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6 card shadow-lg p-4 rounded"
-             style="background-color:#ffffff; border-top:8px solid #e60000;">
-
-            <!-- Botón pequeño en esquina superior izquierda con imagen -->
-            <div style="position:absolute; top:10px; left:10px;">
-                <a href="javascript:window.history.back();"
-                   class="d-inline-block">
-                    <img src="https://i.pinimg.com/564x/35/b3/c1/35b3c1ecf233d242dc8d504203eebeec.jpg"
-                         alt="Volver"
-                         class="img-fluid rounded-circle shadow-sm"
-                         style="width:40px; height:40px; cursor:pointer;">
-                </a>
-            </div>
-
-
-            <!-- Encabezado -->
+        <div class="col-md-6 card shadow-lg p-4 rounded" style="border-top:8px solid #e60000;">
             <h2 class="text-center mb-4 text-danger fw-bold">Compra de Boleto</h2>
 
-            <!-- Campo nombre -->
-            <div class="mb-3">
-                <label class="form-label fw-semibold text-danger">Nombre completo del usuario</label>
-                <input type="text" class="form-control border-danger" placeholder="Ej: Juan Pérez">
-            </div>
+            <form method="post">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-danger">Nombre del Pasajero</label>
+                    <input type="text" class="form-control border-danger" placeholder="Ej: Diego Prueba" required>
+                </div>
 
-            <!-- Campo cédula -->
-            <div class="mb-3">
-                <label class="form-label fw-semibold text-danger">Número de cédula</label>
-                <input type="text" class="form-control border-danger" placeholder="Ingrese 10 dígitos">
-            </div>
+                <label class="form-label fw-semibold text-danger mb-3">Seleccione Método de Pago</label>
+                <div class="row text-center mb-4">
+                    <div class="col-6">
+                        <input type="radio" asp-for="Metodo" value="Transferencia" id="trans" checked>
+                        <label for="trans" class="ms-2">Transferencia</label>
+                    </div>
+                    <div class="col-6">
+                        <input type="radio" asp-for="Metodo" value="Tarjeta" id="tarj">
+                        <label for="tarj" class="ms-2">Tarjeta</label>
+                    </div>
+                </div>
 
-            <!-- Botones -->
-            <div class="d-grid gap-2 mt-4">
-                <a asp-page="/MetodosPagoCompra"
-                   class="btn btn-lg fw-bold"
-                   style="background-color:#e60000; color:#fff;">
-                    Método de Pago
-                </a>
-
-                <a asp-page="/Usuario"
-                   class="btn btn-outline-danger fw-semibold">
-                    Cancelar y volver
-                </a>
-            </div>
-
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-lg fw-bold" style="background-color:#e60000; color:#fff;">
+                        Siguiente
+                    </button>
+                    <a asp-page="/Usuario" class="btn btn-outline-danger">Cancelar</a>
+                </div>
+            </form>
         </div>
     </div>
 </div>

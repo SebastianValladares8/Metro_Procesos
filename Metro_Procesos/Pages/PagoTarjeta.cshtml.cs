@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Metro_Procesos.Data;
-using Metro_Procesos.Models;
-using Microsoft.AspNetCore.Http; // Para usar Session
+using Microsoft.EntityFrameworkCore;
+using QRCoder;
 
 namespace Metro_Procesos.Pages
 {
@@ -15,58 +15,67 @@ namespace Metro_Procesos.Pages
             _context = context;
         }
 
+        // --- Propiedades Vinculadas al Formulario ---
         [BindProperty]
-        public decimal Monto { get; set; }
+        public string Titular { get; set; } = string.Empty;
+
+        [BindProperty]
+        public string NumeroTarjeta { get; set; } = string.Empty;
+
+        [BindProperty]
+        public string Expiracion { get; set; } = string.Empty;
+
+        [BindProperty]
+        public string CVV { get; set; } = string.Empty;
+
+        // --- Propiedades para la Vista ---
+        public string QrCodeImage { get; set; } = string.Empty;
+        public string UsuarioNombre { get; set; } = string.Empty;
+        public string TarjetaEnmascarada { get; set; } = string.Empty;
 
         public void OnGet() { }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
-            // VALIDACIÓN: Si el monto no es válido, no hace nada
-            if (!ModelState.IsValid || Monto <= 0)
+            // 1. Obtener usuario de la sesión
+            var usuarioId = HttpContext.Session.GetInt32("UsuarioId");
+            if (usuarioId == null) return RedirectToPage("/Index");
+
+            var usuario = await _context.usuario.FirstOrDefaultAsync(u => u.Id == usuarioId);
+
+            if (usuario != null)
             {
+                // SIMULACIÓN DE PASARELA DE PAGO: 
+                // En un sistema real, aquí enviaríamos los datos a Visa/Mastercard.
+                // Aquí solo validamos que el número tenga 16 dígitos.
+                if (NumeroTarjeta.Length < 16)
+                {
+                    ModelState.AddModelError("NumeroTarjeta", "Número de tarjeta inválido.");
+                    return Page();
+                }
+
+                // 2. Seguridad: Enmascarar la tarjeta para el ticket (Ej: **** 1234)
+                TarjetaEnmascarada = "**** **** **** " + NumeroTarjeta.Substring(NumeroTarjeta.Length - 4);
+
+                // 3. Asignar datos para el ticket
+                UsuarioNombre = usuario.Nombre;
+
+                // 4. Generar el QR con info de la transacción
+                string contenidoQR = $"METRO|TARJETA|{usuario.Nombre}|{DateTime.Now:yyyyMMddHHmm}";
+
+                using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+                using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(contenidoQR, QRCodeGenerator.ECCLevel.Q))
+                using (PngByteQRCode qrCode = new PngByteQRCode(qrCodeData))
+                {
+                    byte[] qrBytes = qrCode.GetGraphic(20);
+                    QrCodeImage = $"data:image/png;base64,{Convert.ToBase64String(qrBytes)}";
+                }
+
                 return Page();
             }
 
-            int? usuarioId = HttpContext.Session.GetInt32("UsuarioId");
-            if (usuarioId == null) return RedirectToPage("/Index");
-
-            var user = _context.usuario.Find(usuarioId);
-
-            if (user != null)
-            {
-                // 1. Actualizar saldo del usuario (S mayúscula)
-                user.Saldo += Monto;
-
-                // 2. Crear registro de recarga
-                var nuevaRecarga = new Recarga
-                {
-                    UsuarioId = user.Id,
-                    Monto = Monto,
-                    MetodoPago = "Tarjeta de Crédito/Débito",
-                    Fecha = DateTime.Now
-                };
-
-                // Asegúrate que en AppDbContext el DbSet se llame 'recarga'
-                _context.recarga.Add(nuevaRecarga);
-
-                try
-                {
-                    // 3. Guardar cambios en SQL Server
-                    _context.SaveChanges();
-
-                    TempData["Mensaje"] = $"¡Recarga exitosa de ${Monto} con tarjeta!";
-                    return RedirectToPage("/Usuario");
-                }
-                catch (Exception ex)
-                {
-                    // Si vuelve a salir "Invalid column name", el error está en Recarga.cs
-                    ModelState.AddModelError(string.Empty, "Error al guardar en la base de datos.");
-                    return Page();
-                }
-            }
-
-            return Page();
+            TempData["Mensaje"] = "Error al procesar el pago.";
+            return RedirectToPage("/Usuario");
         }
     }
 }
