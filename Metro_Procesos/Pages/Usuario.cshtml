@@ -11,7 +11,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
-    
+   
     <div class="card p-4 shadow-lg rounded" style="background-color:#ffffff; border-top:8px solid #e60000;">
 
         <h3 class="text-center text-danger fw-bold mb-3">Bienvenido al Metro de Quito</h3>
@@ -31,10 +31,11 @@
                  Comprar boleto
             </a>
 
-            <a asp-page="/MetodosPagoCompra"
+            <a asp-page="/RecargaSaldo"
                class="btn btn-outline-danger fw-semibold">
                 Recargar saldo
             </a>
+
         </div>
 
         <hr>
@@ -44,6 +45,13 @@
                  alt="Mapa de estaciones Metro de Quito"
                  class="img-fluid rounded shadow-sm border border-danger"
                  style="max-width:800px;" />
+        </div>
+        <div class="mt-4 text-center">
+            <form method="post" asp-page-handler="Logout">
+                <button type="submit" class="btn btn-danger fw-bold shadow-sm" style="background-color:#e60000;">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión en Metro
+                </button>
+            </form>
         </div>
     </div>
 </div>

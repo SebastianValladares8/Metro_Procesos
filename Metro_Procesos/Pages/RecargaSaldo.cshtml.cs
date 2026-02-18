@@ -17,15 +17,19 @@ namespace Metro_Procesos.Pages
             // 1. Validación: Si no se seleccionó un método de pago, recargamos la página
             if (string.IsNullOrEmpty(Metodo)) return Page();
 
-            // 2. Redirección directa: Como el monto se pedirá en la siguiente página,
-            // ya no enviamos parámetros en el RedirectToPage.
+            // 2. Redirección a las nuevas páginas de RECARGA específicas
             if (Metodo == "Transferencia")
             {
-                return RedirectToPage("/ConfirmarTransferencia");
+                // Redirige a RecargaTransferencia.cshtml
+                return RedirectToPage("/RecargaTransferencia");
+            }
+            else if (Metodo == "Tarjeta")
+            {
+                // Redirige a RecargaTarjeta.cshtml
+                return RedirectToPage("/RecargaTarjeta");
             }
 
-            // Enviamos a la página de PayPal
-            return RedirectToPage("/ProcesarPaypal");
+            return Page();
         }
     }
 }

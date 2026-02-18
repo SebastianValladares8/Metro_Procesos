@@ -4,6 +4,7 @@ using Metro_Procesos.Data;
 using Metro_Procesos.Models;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Metro_Procesos.Pages
 {
@@ -39,6 +40,13 @@ namespace Metro_Procesos.Pages
             }
 
             return Page();
+        }
+        public async Task<IActionResult> OnPostLogoutAsync()
+        {
+            // 1. Borramos los datos de la sesión (como el UsuarioId y Saldo)
+            HttpContext.Session.Clear();
+
+            return RedirectToPage("/Index");
         }
     }
 }

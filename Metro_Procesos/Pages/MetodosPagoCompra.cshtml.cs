@@ -10,16 +10,13 @@ namespace Metro_Procesos.Pages
 
         public IActionResult OnPost()
         {
-            // Si elige transferencia, lo mandamos a tu página de transferencia
-            if (Metodo == "Transferencia")
-            {
-                return RedirectToPage("/ConfirmarTransferencia");
-            }
-            // Si elige tarjeta, lo mandamos a tu página de tarjeta
-            else if (Metodo == "Tarjeta")
-            {
-                return RedirectToPage("/PagoTarjeta");
-            }
+            if (string.IsNullOrEmpty(Metodo)) return Page();
+
+            // AÑADE ESTA LÍNEA AQUÍ:
+            if (Metodo == "Saldo") return RedirectToPage("/CompraBoletoSaldo");
+
+            if (Metodo == "Transferencia") return RedirectToPage("/ConfirmarTransferencia");
+            if (Metodo == "Tarjeta") return RedirectToPage("/PagoTarjeta");
 
             return Page();
         }

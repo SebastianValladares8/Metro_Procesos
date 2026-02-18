@@ -8,6 +8,7 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             @* Lógica para mostrar formulario o boleto generado *@
+
             @if (string.IsNullOrEmpty(Model.QrCodeImage))
             {
                 <div class="card shadow-lg p-4 rounded" style="border-top:8px solid #e60000;">

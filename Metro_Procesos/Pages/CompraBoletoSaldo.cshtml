@@ -1,0 +1,57 @@
+﻿@page
+@model Metro_Procesos.Pages.CompraBoletoSaldoModel
+@{
+    ViewData["Title"] = "Boleto con Saldo - Metro de Quito";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div id="ticket-metro" class="mx-auto shadow-lg mb-4" style="max-width: 380px; background: #fff; border-radius: 20px; overflow: hidden; border: 1px solid #eee;">
+
+                <div style="background-color: #e60000; padding: 25px; color: white; text-align: center;">
+                    <h4 class="mb-0 fw-bold">METRO DE QUITO</h4>
+                    <p class="small mb-0 opacity-75">COMPRA CON SALDO CUENTA CIUDAD</p>
+                </div>
+
+                <div class="p-4 text-center">
+                    <div class="alert alert-success py-1 small fw-bold mb-3">
+                        PAGO PROCESADO EXITOSAMENTE
+                    </div>
+
+                    <div class="mb-3">
+                        <img src="@Model.QrCodeImage" class="img-thumbnail" style="width: 220px; border: none;" />
+                    </div>
+
+                    <div class="text-start border-top pt-3 mt-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted small">PASAJERO:</span>
+                            <span class="fw-bold small text-uppercase">@Model.UsuarioNombre</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted small">COSTO:</span>
+                            <span class="fw-bold small text-danger">$0.45</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted small">SALDO RESTANTE:</span>
+                            <span class="fw-bold small text-success">@Model.SaldoRestante.ToString("C2")</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted small">FECHA:</span>
+                            <span class="fw-bold small">@DateTime.Now.ToString("dd/MM/yyyy HH:mm")</span>
+                        </div>
+                    </div>
+
+                    <div class="my-3" style="border-top: 2px dashed #ddd;"></div>
+                    <p class="text-muted mb-0" style="font-size: 0.7rem;">Presente este QR en los lectores de acceso.</p>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 mx-auto" style="max-width: 380px;">
+                <a href="@Model.QrCodeImage" download="Boleto_Metro_Saldo.png" class="btn btn-danger btn-lg fw-bold" style="background-color:#e60000;">Descargar QR</a>
+                <button onclick="window.print()" class="btn btn-outline-dark">Imprimir Comprobante</button>
+                <a asp-page="/Usuario" class="btn btn-link text-danger fw-bold">Volver a mi Perfil</a>
+            </div>
+        </div>
+    </div>
+</div>
