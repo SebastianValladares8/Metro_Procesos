@@ -1,36 +1,70 @@
 ﻿@page
 @model Metro_Procesos.Pages.PagoTarjetaModel
 @{
-    ViewData["Title"] = "Pago con Tarjeta - Metro de Quito";
+    ViewData["Title"] = "Comprobante de Pago - Metro de Quito";
 }
-<h1>hola</h1>
+
+<style>
+    /* --- ESTILOS DE FACTURA ELECTRÓNICA --- */
+    .factura-container {
+        font-family: 'Courier New', Courier, monospace;
+        background-color: #fff;
+        border: 1px solid #333;
+        padding: 30px;
+        color: #000;
+        max-width: 600px;
+        margin: auto;
+    }
+
+    .factura-header {
+        border-bottom: 2px solid #000;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+    }
+
+    .ruc-box {
+        border: 1px solid #000;
+        padding: 10px;
+        text-align: center;
+        font-size: 0.85rem;
+    }
+
+    /* --- REGLAS DE IMPRESIÓN --- */
+    @@media print {
+        .no-print {
+            display: none !important;
+        }
+
+        .factura-container {
+            border: none;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        body {
+            background: white;
+        }
+    }
+</style>
+
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-md-8">
 
-            @* LOGICA DE CONTROL DE FLUJO:
-               Si no hay una imagen QR generada, mostramos el formulario de entrada.
-               Si ya existe el QR, el sistema entiende que el pago fue exitoso y muestra el ticket.
-            *@
             @if (string.IsNullOrEmpty(Model.QrCodeImage))
             {
-                <div class="card shadow-lg p-4 rounded" style="border-top:8px solid #e60000;">
+                @* FORMULARIO DE PAGO *@
+                <div class="card shadow-lg p-4 rounded no-print" style="border-top:8px solid #e60000;">
                     <h2 class="text-center mb-4 text-danger fw-bold">Pago con Tarjeta</h2>
 
-                    @* Formulario que envía los datos mediante el método POST al PageModel *@
                     <form method="post">
                         <div class="mb-3">
                             <label class="form-label fw-bold">Titular de la Tarjeta</label>
-                            @* asp-for: Vincula este input con la propiedad 'Titular' en el servidor *@
                             <input asp-for="Titular" type="text" class="form-control" placeholder="Nombre como aparece en la tarjeta" required />
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-bold">Número de Tarjeta</label>
-                            @* Atributos de validación frontend:
-                               maxlength: limita a 16 caracteres.
-                               pattern="\d*": asegura que el teclado móvil sea numérico.
-                            *@
                             <input asp-for="NumeroTarjeta" type="text" class="form-control" placeholder="0000 0000 0000 0000" maxlength="16" pattern="\d*" required />
                         </div>
 
@@ -41,7 +75,6 @@
                             </div>
                             <div class="col-6 mb-3">
                                 <label class="form-label fw-bold">CVV</label>
-                                @* type="password" para ocultar el código de seguridad al escribir *@
                                 <input asp-for="CVV" type="password" class="form-control" placeholder="123" maxlength="3" required />
                             </div>
                         </div>
@@ -51,7 +84,7 @@
                         </div>
 
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-danger btn-lg fw-bold">Pagar y Generar Ticket</button>
+                            <button type="submit" class="btn btn-danger btn-lg fw-bold">Pagar y Generar Factura</button>
                             <a asp-page="/MetodosPagoCompra" class="btn btn-outline-secondary">Volver</a>
                         </div>
                     </form>
@@ -59,53 +92,75 @@
             }
             else
             {
-                @* VISTA DEL TICKET (Se activa tras un POST exitoso):
-                   Esta sección simula un boleto físico digitalizado.
-                *@
-                <div id="ticket-metro" class="mx-auto shadow-lg mb-4" style="max-width: 350px; background: #fff; border-radius: 20px; overflow: hidden; border: 1px solid #eee;">
+                @* COMPROBANTE DE PAGO ELECTRÓNICO (FACTURA) *@
+                <div id="factura-area" class="factura-container shadow-sm">
 
-                    <div style="background-color: #e60000; padding: 20px; color: white; text-align: center;">
-                        <h4 class="mb-0 fw-bold">METRO DE QUITO</h4>
-                        <p class="small mb-0 opacity-75">SISTEMA DE TRANSPORTE MUNICIPAL</p>
+                    <div class="row factura-header align-items-center">
+                        <div class="col-7">
+                            <h5 class="fw-bold m-0">EMPRESA PÚBLICA METRO DE QUITO</h5>
+                            <small class="d-block text-muted">Matriz: Av. Amazonas y República</small>
+                            <small class="d-block text-muted">Quito - Ecuador</small>
+                        </div>
+                        <div class="col-5">
+                            <div class="ruc-box">
+                                <span class="fw-bold">R.U.C.: 1760000000001</span><br>
+                                <span class="fw-bold">COMPROBANTE ELECTRÓNICO</span><br>
+                                <span>No. 001-003-@DateTime.Now.Ticks.ToString().Substring(12)</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="p-4 text-center">
-                        <div class="mb-3">
-                            @* Renderizado de la imagen QR generada en memoria (Base64) *@
-                            <img src="@Model.QrCodeImage" class="img-thumbnail" style="width: 200px; border: none;" />
-                        </div>
+                    <div class="mb-4 small">
+                        <p class="m-0 text-uppercase"><strong>CLIENTE:</strong> @Model.UsuarioNombre</p>
+                        <p class="m-0"><strong>FORMA DE PAGO:</strong> TARJETA BANCARIA (@Model.TarjetaEnmascarada)</p>
+                        <p class="m-0"><strong>FECHA EMISIÓN:</strong> @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</p>
+                    </div>
 
-                        @* Información procesada y traída desde el servidor *@
-                        <div class="text-start border-top pt-3 mt-3">
-                            <div class="d-flex justify-content-between mb-1">
-                                <span class="text-muted small">PASAJERO:</span>
-                                <span class="fw-bold small text-uppercase">@Model.UsuarioNombre</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-1">
-                                <span class="text-muted small">TARJETA:</span>
-                                @* Mostramos la tarjeta enmascarada para proteger datos del usuario *@
-                                <span class="fw-bold small">@Model.TarjetaEnmascarada</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-1">
-                                <span class="text-muted small">FECHA:</span>
-                                <span class="fw-bold small">@DateTime.Now.ToString("dd/MM/yyyy HH:mm")</span>
-                            </div>
-                        </div>
+                    <table class="table table-sm border-dark small mb-4">
+                        <thead>
+                            <tr class="border-bottom border-dark">
+                                <th>DESCRIPCIÓN</th>
+                                <th class="text-end">CANT.</th>
+                                <th class="text-end">TOTAL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>TICKET DE VIAJE - PAGO CON TARJETA</td>
+                                <td class="text-end">1.00</td>
+                                <td class="text-end">0.40</td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                        <div class="my-3" style="border-top: 2px dashed #ddd;"></div>
-                        <p class="text-muted mb-0" style="font-size: 0.65rem;">Acerque este código al lector del validador.</p>
+                    <div class="row align-items-center">
+                        <div class="col-6 text-center border-end border-dark">
+                            <img src="@Model.QrCodeImage" style="width: 150px;" class="mb-2 border p-1" />
+                            <p class="fw-bold m-0" style="font-size: 0.7rem;">CÓDIGO QR DE ACCESO</p>
+                        </div>
+                        <div class="col-6 text-end small">
+                            <p class="m-0">SUBTOTAL: $0.40</p>
+                            <p class="m-0">IVA 15%: $0.05</p>
+                            <h5 class="fw-bold mt-2 pt-2 border-top border-dark">TOTAL: $0.45</h5>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4 border-top border-dark pt-2" style="font-size: 0.65rem;">
+                        <strong>CLAVE DE ACCESO:</strong> @Guid.NewGuid().ToString().Replace("-", "").ToUpper()
                     </div>
                 </div>
 
-                @* ACCIONES ADICIONALES: Descarga y Manejo de archivos *@
-                <div class="d-grid gap-2 mx-auto" style="max-width: 350px;">
-                    @* Permite descargar la imagen del QR directamente *@
-                    <a href="@Model.QrCodeImage" download="Boleto_Metro_Tarjeta.png" class="btn btn-danger btn-lg fw-bold">Descargar Boleto</a>
-                    @* Llama a la función de impresión nativa del navegador *@
-                    <button onclick="window.print()" class="btn btn-outline-dark">Imprimir Ticket</button>
-                    <a asp-page="/Usuario" class="btn btn-link text-muted">Ir a mi Perfil</a>
+                <div class="text-center mt-4 no-print d-grid gap-2 mx-auto" style="max-width: 400px;">
+                    <button onclick="window.print()" class="btn btn-dark fw-bold btn-lg shadow">
+                        Imprimir / Guardar Factura PDF
+                    </button>
+                    <a href="@Model.QrCodeImage" download="Boleto_Metro_Tarjeta.png" class="btn btn-outline-danger">
+                        Descargar solo QR
+                    </a>
+                    <a asp-page="/Usuario" class="btn btn-link text-muted mt-2">Finalizar y volver al Perfil</a>
                 </div>
             }
+
         </div>
     </div>
 </div>

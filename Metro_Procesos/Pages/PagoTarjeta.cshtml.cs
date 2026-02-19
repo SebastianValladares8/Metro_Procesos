@@ -15,7 +15,6 @@ namespace Metro_Procesos.Pages
             _context = context;
         }
 
-        // --- Propiedades Vinculadas al Formulario ---
         [BindProperty]
         public string Titular { get; set; } = string.Empty;
 
@@ -28,7 +27,6 @@ namespace Metro_Procesos.Pages
         [BindProperty]
         public string CVV { get; set; } = string.Empty;
 
-        // --- Propiedades para la Vista ---
         public string QrCodeImage { get; set; } = string.Empty;
         public string UsuarioNombre { get; set; } = string.Empty;
         public string TarjetaEnmascarada { get; set; } = string.Empty;
@@ -37,7 +35,6 @@ namespace Metro_Procesos.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // 1. Obtener usuario de la sesión
             var usuarioId = HttpContext.Session.GetInt32("UsuarioId");
             if (usuarioId == null) return RedirectToPage("/Index");
 
@@ -45,22 +42,18 @@ namespace Metro_Procesos.Pages
 
             if (usuario != null)
             {
-                // SIMULACIÓN DE PASARELA DE PAGO: 
-                // En un sistema real, aquí enviaríamos los datos a Visa/Mastercard.
-                // Aquí solo validamos que el número tenga 16 dígitos.
-                if (NumeroTarjeta.Length < 16)
+                // Validación de tarjeta
+                if (string.IsNullOrEmpty(NumeroTarjeta) || NumeroTarjeta.Length < 16)
                 {
                     ModelState.AddModelError("NumeroTarjeta", "Número de tarjeta inválido.");
                     return Page();
                 }
 
-                // 2. Seguridad: Enmascarar la tarjeta para el ticket (Ej: **** 1234)
+                // 1. Preparar datos para la factura
+                UsuarioNombre = usuario.Nombre;
                 TarjetaEnmascarada = "**** **** **** " + NumeroTarjeta.Substring(NumeroTarjeta.Length - 4);
 
-                // 3. Asignar datos para el ticket
-                UsuarioNombre = usuario.Nombre;
-
-                // 4. Generar el QR con info de la transacción
+                // 2. Generar el QR
                 string contenidoQR = $"METRO|TARJETA|{usuario.Nombre}|{DateTime.Now:yyyyMMddHHmm}";
 
                 using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
