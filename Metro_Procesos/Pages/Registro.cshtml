@@ -1,53 +1,67 @@
-﻿@page
-@model Metro_Procesos.Pages.RegistroModel
+﻿@* 1. Directivas de Razor: Define que es una página y la vincula con su clase C# (UsuarioModel) *@
+@page
+@model Metro_Procesos.Pages.UsuarioModel
 
 <div class="container mt-4">
-    <div class="card shadow-lg p-4 mx-auto rounded"
-         style="max-width: 600px; background-color:#ffffff; border-top:8px solid #e60000;">
 
-        <!-- Botón pequeño en esquina superior izquierda con imagen -->
-        <div style="position:absolute; top:10px; left:10px;">
-            <a href="javascript:window.history.back();"
-               class="d-inline-block">
-                <img src="https://i.pinimg.com/564x/35/b3/c1/35b3c1ecf233d242dc8d504203eebeec.jpg"
-                     alt="Volver"
-                     class="img-fluid rounded-circle shadow-sm"
-                     style="width:40px; height:40px; cursor:pointer;">
+    @* 2. Mensajería Dinámica: Verifica si el servidor envió una notificación (éxito/error) vía TempData *@
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 mb-4" role="alert" style="border-left: 5px solid #28a745 !important;">
+            <i class="bi bi-check-circle-fill me-2"></i> @TempData["Mensaje"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @* 3. Contenedor de Perfil: Tarjeta con diseño Bootstrap y bordes temáticos del Metro *@
+    <div class="card p-4 shadow-lg rounded" style="background-color:#ffffff; border-top:8px solid #e60000;">
+
+        <h3 class="text-center text-danger fw-bold mb-3">Bienvenido al Metro de Quito</h3>
+
+        @* 4. Interpolarización de Datos: Muestra el nombre. El operador '??' evita errores si el dato es nulo *@
+        <p class="text-center">
+            Nombre del usuario: <strong class="text-secondary">@(Model.DatosUsuario?.Nombre ?? "Usuario")</strong>
+        </p>
+
+        @* 5. Formateo de Moneda: El método ToString("C2") convierte el valor numérico a formato moneda local *@
+        <p class="text-center">
+            Saldo disponible: <span class="badge bg-success fs-6">@Model.DatosUsuario?.Saldo.ToString("C2")</span>
+        </p>
+
+        <hr>
+
+        @* 6. Navegación (Tag Helpers): Enlaces internos que dirigen a las páginas de compra y recarga *@
+        <div class="d-flex justify-content-center gap-3">
+            <a asp-page="/MetodosPagoCompra"
+               class="btn"
+               style="background-color:#e60000; color:#fff; font-weight:bold;">
+                Comprar boleto
+            </a>
+
+            <a asp-page="/RecargaSaldo"
+               class="btn btn-outline-danger fw-semibold">
+                Recargar saldo
             </a>
         </div>
 
+        <hr>
 
-        <!-- Encabezado -->
-        <h2 class="text-center text-danger fw-bold mb-4">Registro de Usuario</h2>
+        @* 7. Recurso Visual: Imagen informativa del mapa de estaciones *@
+        <h5 class="mt-4 text-danger fw-bold text-center">Mapa de estaciones</h5>
+        <div class="text-center mt-3">
+            <img src="https://metro-quito.com/wp-content/uploads/paradas-metro-quito-2.jpg"
+                 alt="Mapa de estaciones Metro de Quito"
+                 class="img-fluid rounded shadow-sm border border-danger"
+                 style="max-width:800px;" />
+        </div>
 
-        <!-- Formulario -->
-        <form method="post">
-            <div class="mb-3">
-                <label class="form-label text-danger fw-semibold">Nombre Completo</label>
-                <input type="text" asp-for="Usuario.Nombre" class="form-control border-danger" placeholder="Ej: Sebastián Pérez" required>
-            </div>
-            <div class="row">
-                <div class="col-md-12 mb-3">
-                    <label class="fw-semibold text-danger">Correo Electrónico</label>
-                    <input type="email" class="form-control border-danger" placeholder="usuario@correo.com" asp-for="Usuario.Correo" required>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label class="fw-semibold text-danger">Número del documento</label>
-                    <input type="text" class="form-control border-danger" placeholder="Ej: 0102030405" asp-for="Usuario.Cedula" required>
-                </div>
-
-                <div class="col-md-12 mb-3">
-                    <label class="fw-semibold text-danger">Contraseña</label>
-                    <input type="password" class="form-control border-danger" placeholder="********" asp-for="Usuario.Contrasena" required>
-                </div>
-            </div>
-
-            <!-- Botón principal -->
-            <button type="submit" class="btn w-100 mt-3"
-                    style="background-color:#e60000; color:#fff; font-weight:bold;">
-                Finalizar Registro
-            </button>
-        </form>
+        @* 8. Gestión de Sesión: Formulario tipo POST que invoca el método 'Logout' en el backend *@
+        <div class="mt-4 text-center">
+            <form method="post" asp-page-handler="Logout">
+                <button type="submit" class="btn btn-danger fw-bold shadow-sm" style="background-color:#e60000;">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión en Metro
+                </button>
+            </form>
+        </div>
     </div>
 </div>

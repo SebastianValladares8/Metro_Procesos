@@ -1,4 +1,5 @@
-﻿@page
+﻿@* 1. Directivas de Razor: Vinculación con el modelo que procesa la validación de transferencia y generación de QR *@
+@page
 @model Metro_Procesos.Pages.ConfirmarTransferenciaModel
 @{
     ViewData["Title"] = "Confirmar Pago - Metro de Quito";
@@ -7,13 +8,17 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            @* Lógica para mostrar formulario o boleto generado *@
 
+            @* 2. Lógica Condicional (Renderizado Dinámico): 
+               Si no existe una imagen QR, muestra el formulario de validación. 
+               Si el QR ya se generó, muestra el boleto digital. *@
             @if (string.IsNullOrEmpty(Model.QrCodeImage))
             {
+                @* ESTADO A: Formulario de ingreso de comprobante *@
                 <div class="card shadow-lg p-4 rounded" style="border-top:8px solid #e60000;">
                     <h2 class="text-center mb-4 text-danger fw-bold">Confirmación de Transferencia</h2>
 
+                    @* Datos bancarios informativos para el usuario *@
                     <div class="alert alert-secondary small mb-4">
                         <h6 class="fw-bold"><i class="bi bi-bank"></i> Datos para la Transferencia:</h6>
                         <p class="mb-1"><strong>Banco:</strong> Banco Pichincha (Cta. Corriente)</p>
@@ -23,15 +28,19 @@
                     </div>
 
                     <form method="post">
+                        @* Campo de Monto: 'readonly' porque el valor del pasaje es fijo ($0.45) *@
                         <div class="mb-3">
                             <label class="form-label fw-bold">Monto a Pagar ($)</label>
                             <input asp-for="Monto" class="form-control" value="0.45" readonly />
                         </div>
+
+                        @* Captura del número de comprobante para auditoría posterior *@
                         <div class="mb-3">
                             <label class="form-label fw-bold">Número de Referencia / Comprobante</label>
                             <input asp-for="Referencia" class="form-control" placeholder="Ej: 123456789" required />
                             <div class="form-text">Ingrese el número que aparece en su comprobante bancario.</div>
                         </div>
+
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-danger btn-lg fw-bold">Validar y Generar QR</button>
                             <a asp-page="/MetodosPagoCompra" class="btn btn-outline-secondary">Cancelar</a>
@@ -41,17 +50,22 @@
             }
             else
             {
+                @* ESTADO B: Visualización del Boleto Digital (Ticket) *@
                 <div id="ticket-metro" class="mx-auto shadow-lg mb-4" style="max-width: 350px; background: #fff; border-radius: 20px; overflow: hidden; border: 1px solid #eee;">
+
+                    @* Encabezado del ticket con estilo de impresión térmica *@
                     <div style="background-color: #e60000; padding: 20px; color: white; text-align: center;">
                         <h4 class="mb-0 fw-bold">METRO DE QUITO</h4>
                         <p class="small mb-0 opacity-75">SISTEMA DE TRANSPORTE MUNICIPAL</p>
                     </div>
 
                     <div class="p-4 text-center">
+                        @* 3. Imagen del QR: Generada en el servidor y pasada como una cadena Base64 o URL *@
                         <div class="mb-3">
                             <img src="@Model.QrCodeImage" class="img-thumbnail" style="width: 200px; border: none;" />
                         </div>
 
+                        @* 4. Detalles del Viaje: Muestra información dinámica del pasajero y la transacción *@
                         <div class="text-start border-top pt-3 mt-3">
                             <div class="d-flex justify-content-between mb-1">
                                 <span class="text-muted small">PASAJERO:</span>
@@ -71,15 +85,18 @@
                             </div>
                         </div>
 
+                        @* Línea punteada decorativa para simular ticket físico *@
                         <div class="my-3" style="border-top: 2px dashed #ddd;"></div>
                         <p class="text-muted mb-0" style="font-size: 0.65rem;">Escanee este código en los validadores de la estación.</p>
                     </div>
                 </div>
 
+                @* 5. Acciones Finales: Opciones para descargar, imprimir o volver al perfil *@
                 <div class="d-grid gap-2 mx-auto" style="max-width: 350px;">
-                    @* LÍNEA CORREGIDA PARA EVITAR ERROR CS1061 *@
+                    @* Botón de descarga: Permite guardar la imagen del QR directamente en el dispositivo *@
                     <a href="@Model.QrCodeImage" download="Boleto_Metro_Quito_@(Model.Referencia).png" class="btn btn-danger btn-lg fw-bold">Descargar Boleto</a>
 
+                    @* Uso de JavaScript nativo para abrir el diálogo de impresión del sistema *@
                     <button onclick="window.print()" class="btn btn-outline-dark">Imprimir Ticket</button>
                     <a asp-page="/Usuario" class="btn btn-link text-muted">Ir a mi Perfil</a>
                 </div>

@@ -1,4 +1,5 @@
-﻿@page
+﻿@* 1. Directiva de página y conexión con el modelo de compra por saldo interno *@
+@page
 @model Metro_Procesos.Pages.CompraBoletoSaldoModel
 @{
     ViewData["Title"] = "Boleto con Saldo - Metro de Quito";
@@ -7,22 +8,27 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
+            @* 2. Diseño del Ticket: Contenedor con estilo de boleto físico, bordes redondeados y sombra *@
             <div id="ticket-metro" class="mx-auto shadow-lg mb-4" style="max-width: 380px; background: #fff; border-radius: 20px; overflow: hidden; border: 1px solid #eee;">
 
+                @* 3. Cabecera del Boleto: Fondo rojo institucional y título del método de pago utilizado *@
                 <div style="background-color: #e60000; padding: 25px; color: white; text-align: center;">
                     <h4 class="mb-0 fw-bold">METRO DE QUITO</h4>
                     <p class="small mb-0 opacity-75">COMPRA CON SALDO CUENTA CIUDAD</p>
                 </div>
 
                 <div class="p-4 text-center">
+                    @* Mensaje de confirmación inmediata del procesamiento del pago *@
                     <div class="alert alert-success py-1 small fw-bold mb-3">
                         PAGO PROCESADO EXITOSAMENTE
                     </div>
 
+                    @* 4. Código QR Dinámico: Se genera en el backend y se muestra aquí para el acceso a las estaciones *@
                     <div class="mb-3">
                         <img src="@Model.QrCodeImage" class="img-thumbnail" style="width: 220px; border: none;" />
                     </div>
 
+                    @* 5. Detalles de la Transacción: Muestra datos del usuario, costo fijo y el saldo remanente *@
                     <div class="text-start border-top pt-3 mt-3">
                         <div class="d-flex justify-content-between mb-1">
                             <span class="text-muted small">PASAJERO:</span>
@@ -32,6 +38,7 @@
                             <span class="text-muted small">COSTO:</span>
                             <span class="fw-bold small text-danger">$0.45</span>
                         </div>
+                        @* Formateo de moneda para el saldo que le queda al usuario después del descuento *@
                         <div class="d-flex justify-content-between mb-1">
                             <span class="text-muted small">SALDO RESTANTE:</span>
                             <span class="fw-bold small text-success">@Model.SaldoRestante.ToString("C2")</span>
@@ -42,14 +49,20 @@
                         </div>
                     </div>
 
+                    @* Línea estética dashed para simular el precorte de un boleto térmico *@
                     <div class="my-3" style="border-top: 2px dashed #ddd;"></div>
                     <p class="text-muted mb-0" style="font-size: 0.7rem;">Presente este QR en los lectores de acceso.</p>
                 </div>
             </div>
 
+            @* 6. Botones de Acción: Opciones de descarga, impresión y navegación de retorno *@
             <div class="d-grid gap-2 mx-auto" style="max-width: 380px;">
+                @* Atributo 'download' para forzar al navegador a descargar la imagen en lugar de abrirla *@
                 <a href="@Model.QrCodeImage" download="Boleto_Metro_Saldo.png" class="btn btn-danger btn-lg fw-bold" style="background-color:#e60000;">Descargar QR</a>
+
+                @* Función de impresión rápida *@
                 <button onclick="window.print()" class="btn btn-outline-dark">Imprimir Comprobante</button>
+
                 <a asp-page="/Usuario" class="btn btn-link text-danger fw-bold">Volver a mi Perfil</a>
             </div>
         </div>

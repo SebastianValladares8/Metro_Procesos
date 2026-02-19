@@ -1,4 +1,5 @@
-﻿@page
+﻿@* 1. Directivas de Razor: Define la página y la vincula con el modelo de compra de boletos *@
+@page
 @model Metro_Procesos.Pages.MetodosPagoCompraModel
 @{
     ViewData["Title"] = "Metro de Quito - Comprar Boleto";
@@ -6,18 +7,23 @@
 
 <div class="container mt-5">
     <div class="row justify-content-center">
+        @* 2. Estructura de Tarjeta: Contenedor con sombra y estilo visual alineado a la marca del Metro *@
         <div class="col-md-6 card shadow-lg p-4 rounded" style="border-top:8px solid #e60000;">
             <h2 class="text-center mb-4 text-danger fw-bold">Compra de Boleto</h2>
 
+            @* 3. Formulario de Compra: Recopila la información necesaria para el ticket *@
             <form method="post">
+                @* 4. Identificación del Pasajero: Campo obligatorio para personalizar el boleto digital *@
                 <div class="mb-3">
                     <label class="form-label fw-semibold text-danger">Nombre del Pasajero</label>
                     <input type="text" class="form-control border-danger" placeholder="Ej: Diego Prueba" required>
                 </div>
 
+                @* 5. Selección de Pago: Grupo de botones de opción (Radio Buttons) *@
                 <label class="form-label fw-semibold text-danger mb-3">Seleccione Método de Pago</label>
                 <div class="row text-center mb-4">
                     <div class="col-6">
+                        @* asp-for vincula la selección a la propiedad 'Metodo' en C# *@
                         <input type="radio" asp-for="Metodo" value="Transferencia" id="trans" checked>
                         <label for="trans" class="ms-2">Transferencia</label>
                     </div>
@@ -27,10 +33,12 @@
                     </div>
                 </div>
 
+                @* 6. Botonera de Flujo: Botón 'Siguiente' para procesar el POST y enlace para abortar la operación *@
                 <div class="d-grid gap-2">
                     <button type="submit" class="btn btn-lg fw-bold" style="background-color:#e60000; color:#fff;">
                         Siguiente
                     </button>
+                    @* Navegación segura hacia el perfil del usuario mediante Tag Helpers *@
                     <a asp-page="/Usuario" class="btn btn-outline-danger">Cancelar</a>
                 </div>
             </form>

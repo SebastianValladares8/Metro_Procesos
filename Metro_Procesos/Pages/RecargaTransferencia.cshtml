@@ -1,4 +1,5 @@
-﻿@page
+﻿@* 1. Configuración de la página y enlace con el modelo de datos específico para transferencias *@
+@page
 @model Metro_Procesos.Pages.RecargaTransferenciaModel
 @{
     ViewData["Title"] = "Recarga por Transferencia - Metro de Quito";
@@ -7,9 +8,11 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
+            @* 2. Contenedor visual tipo Tarjeta con el color institucional (Rojo Metro) en el borde superior *@
             <div class="card shadow-lg p-4 rounded" style="border-top:8px solid #e60000;">
                 <h2 class="text-center mb-4 text-danger fw-bold">Recarga por Transferencia</h2>
 
+                @* 3. Bloque Informativo: Muestra datos estáticos necesarios para que el usuario realice la transacción bancaria *@
                 <div class="alert alert-secondary small mb-4">
                     <h6 class="fw-bold"><i class="bi bi-bank"></i> Datos para el Depósito:</h6>
                     <p class="mb-1"><strong>Banco:</strong> Banco Pichincha (Cta. Corriente)</p>
@@ -18,22 +21,29 @@
                     <p class="mb-0"><strong>RUC:</strong> 1768154260001</p>
                 </div>
 
+                @* 4. Formulario de Captura: Envía los datos al servidor mediante el método POST *@
                 <form method="post">
+
+                    @* 5. Campo de Monto: Usa 'asp-for' para vincular la entrada directamente con la propiedad del Modelo C# *@
                     <div class="mb-4 p-3 bg-light rounded border border-danger">
                         <label class="form-label fw-bold text-danger">Monto Transferido ($)</label>
                         <input asp-for="MontoRecarga" type="number" step="0.01" min="0.50" class="form-control form-control-lg border-danger" placeholder="0.00" required />
                         <small class="text-muted">Mínimo sugerido: $0.50</small>
                     </div>
 
+                    @* 6. Validación de Referencia: Campo obligatorio para que el personal contable rastree el pago *@
                     <div class="mb-3">
                         <label class="form-label fw-bold">Número de Referencia / Comprobante</label>
                         <input asp-for="Referencia" class="form-control border-secondary" placeholder="Ej: 123456789" required />
                         <div class="form-text">Ingrese el número de operación de su transferencia.</div>
                     </div>
+
+                    @* 7. Nota de Advertencia: Gestiona las expectativas del usuario sobre el tiempo de procesamiento *@
                     <div class="alert alert-warning small border">
                         <i class="bi bi-info-circle"></i> Su recarga será validada por el sistema contable del Metro.
                     </div>
 
+                    @* 8. Botonera de Acción: Botón de envío (Submit) y enlace de navegación para cancelar/volver *@
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-danger btn-lg fw-bold" style="background-color:#e60000;">Confirmar Transferencia</button>
                         <a asp-page="/RecargaSaldo" class="btn btn-outline-secondary">Volver</a>

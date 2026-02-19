@@ -1,4 +1,5 @@
-﻿@page
+﻿@* 1. Directiva de página y vinculación con el modelo de lógica de recarga por tarjeta *@
+@page
 @model Metro_Procesos.Pages.RecargaTarjetaModel
 @{
     ViewData["Title"] = "Recargar Saldo - Metro de Quito";
@@ -7,41 +8,51 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
+            @* 2. Estructura visual: Tarjeta con sombra (shadow-lg) y borde superior rojo institucional *@
             <div class="card shadow-lg p-4 rounded" style="border-top:8px solid #e60000;">
                 <h2 class="text-center mb-4 text-danger fw-bold">Recarga con Tarjeta</h2>
 
+                @* 3. Formulario de Captura: Utiliza el método POST para enviar datos sensibles de forma segura *@
                 <form method="post">
+
+                    @* 4. Campo Monto: Vinculado a 'MontoRecarga'. Incluye validaciones de valor mínimo y decimales *@
                     <div class="mb-4 p-3 bg-light rounded border border-danger">
                         <label class="form-label fw-bold text-danger">Monto a Recargar ($)</label>
                         <input asp-for="MontoRecarga" type="number" step="0.01" min="0.50" class="form-control form-control-lg border-danger" placeholder="0.00" required />
                         <small class="text-muted">Mínimo de recarga: $0.50</small>
                     </div>
 
+                    @* 5. Campo Titular: Entrada de texto simple para el nombre del dueño de la tarjeta *@
                     <div class="mb-3">
                         <label class="form-label fw-bold">Titular de la Tarjeta</label>
                         <input asp-for="Titular" type="text" class="form-control" placeholder="Nombre como aparece en la tarjeta" required />
                     </div>
 
+                    @* 6. Campo Número de Tarjeta: Valida longitud de 16 dígitos y usa un patrón numérico (\d*) *@
                     <div class="mb-3">
                         <label class="form-label fw-bold">Número de Tarjeta</label>
                         <input asp-for="NumeroTarjeta" type="text" class="form-control" placeholder="0000 0000 0000 0000" maxlength="16" pattern="\d*" required />
                     </div>
 
+                    @* 7. Campos de Seguridad: Fila dividida para la fecha de expiración y el código CVV *@
                     <div class="row">
                         <div class="col-6 mb-3">
                             <label class="form-label fw-bold">Expiración</label>
                             <input asp-for="Expiracion" type="text" class="form-control" placeholder="MM/AA" maxlength="5" required />
                         </div>
                         <div class="col-6 mb-3">
+                            @* El tipo 'password' oculta los dígitos del CVV por seguridad visual *@
                             <label class="form-label fw-bold">CVV</label>
                             <input asp-for="CVV" type="password" class="form-control" placeholder="123" maxlength="3" required />
                         </div>
                     </div>
 
+                    @* 8. Indicador de Seguridad: Información de confianza para el usuario final *@
                     <div class="alert alert-light border small text-muted">
                         <i class="bi bi-shield-lock"></i> Su transacción está protegida por el sistema seguro del Metro de Quito.
                     </div>
 
+                    @* 9. Acciones: Botón 'Confirmar' para disparar el evento POST y botón 'Volver' para navegar atrás *@
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-danger btn-lg fw-bold" style="background-color:#e60000;">Confirmar Recarga</button>
                         <a asp-page="/RecargaSaldo" class="btn btn-outline-secondary">Volver</a>

@@ -7,21 +7,33 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
+
+            @* LOGICA DE CONTROL DE FLUJO:
+               Si no hay una imagen QR generada, mostramos el formulario de entrada.
+               Si ya existe el QR, el sistema entiende que el pago fue exitoso y muestra el ticket.
+            *@
             @if (string.IsNullOrEmpty(Model.QrCodeImage))
             {
                 <div class="card shadow-lg p-4 rounded" style="border-top:8px solid #e60000;">
                     <h2 class="text-center mb-4 text-danger fw-bold">Pago con Tarjeta</h2>
+
+                    @* Formulario que envía los datos mediante el método POST al PageModel *@
                     <form method="post">
                         <div class="mb-3">
                             <label class="form-label fw-bold">Titular de la Tarjeta</label>
-                            @* Vinculación con asp-for *@
+                            @* asp-for: Vincula este input con la propiedad 'Titular' en el servidor *@
                             <input asp-for="Titular" type="text" class="form-control" placeholder="Nombre como aparece en la tarjeta" required />
                         </div>
+
                         <div class="mb-3">
                             <label class="form-label fw-bold">Número de Tarjeta</label>
-                            @* Usamos type="text" pero limitamos a números en el teclado móvil *@
+                            @* Atributos de validación frontend:
+                               maxlength: limita a 16 caracteres.
+                               pattern="\d*": asegura que el teclado móvil sea numérico.
+                            *@
                             <input asp-for="NumeroTarjeta" type="text" class="form-control" placeholder="0000 0000 0000 0000" maxlength="16" pattern="\d*" required />
                         </div>
+
                         <div class="row">
                             <div class="col-6 mb-3">
                                 <label class="form-label fw-bold">Expiración</label>
@@ -29,12 +41,15 @@
                             </div>
                             <div class="col-6 mb-3">
                                 <label class="form-label fw-bold">CVV</label>
+                                @* type="password" para ocultar el código de seguridad al escribir *@
                                 <input asp-for="CVV" type="password" class="form-control" placeholder="123" maxlength="3" required />
                             </div>
                         </div>
+
                         <div class="alert alert-light border small text-muted">
                             <i class="bi bi-shield-lock"></i> El pago de <strong>$0.45</strong> será procesado de forma segura.
                         </div>
+
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-danger btn-lg fw-bold">Pagar y Generar Ticket</button>
                             <a asp-page="/MetodosPagoCompra" class="btn btn-outline-secondary">Volver</a>
@@ -44,8 +59,11 @@
             }
             else
             {
-                @* --- VISTA DEL TICKET GENERADO --- *@
+                @* VISTA DEL TICKET (Se activa tras un POST exitoso):
+                   Esta sección simula un boleto físico digitalizado.
+                *@
                 <div id="ticket-metro" class="mx-auto shadow-lg mb-4" style="max-width: 350px; background: #fff; border-radius: 20px; overflow: hidden; border: 1px solid #eee;">
+
                     <div style="background-color: #e60000; padding: 20px; color: white; text-align: center;">
                         <h4 class="mb-0 fw-bold">METRO DE QUITO</h4>
                         <p class="small mb-0 opacity-75">SISTEMA DE TRANSPORTE MUNICIPAL</p>
@@ -53,9 +71,11 @@
 
                     <div class="p-4 text-center">
                         <div class="mb-3">
+                            @* Renderizado de la imagen QR generada en memoria (Base64) *@
                             <img src="@Model.QrCodeImage" class="img-thumbnail" style="width: 200px; border: none;" />
                         </div>
 
+                        @* Información procesada y traída desde el servidor *@
                         <div class="text-start border-top pt-3 mt-3">
                             <div class="d-flex justify-content-between mb-1">
                                 <span class="text-muted small">PASAJERO:</span>
@@ -63,6 +83,7 @@
                             </div>
                             <div class="d-flex justify-content-between mb-1">
                                 <span class="text-muted small">TARJETA:</span>
+                                @* Mostramos la tarjeta enmascarada para proteger datos del usuario *@
                                 <span class="fw-bold small">@Model.TarjetaEnmascarada</span>
                             </div>
                             <div class="d-flex justify-content-between mb-1">
@@ -76,8 +97,11 @@
                     </div>
                 </div>
 
+                @* ACCIONES ADICIONALES: Descarga y Manejo de archivos *@
                 <div class="d-grid gap-2 mx-auto" style="max-width: 350px;">
+                    @* Permite descargar la imagen del QR directamente *@
                     <a href="@Model.QrCodeImage" download="Boleto_Metro_Tarjeta.png" class="btn btn-danger btn-lg fw-bold">Descargar Boleto</a>
+                    @* Llama a la función de impresión nativa del navegador *@
                     <button onclick="window.print()" class="btn btn-outline-dark">Imprimir Ticket</button>
                     <a asp-page="/Usuario" class="btn btn-link text-muted">Ir a mi Perfil</a>
                 </div>

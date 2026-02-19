@@ -1,16 +1,19 @@
-﻿@page
+﻿@* 1. Directiva de página y enlace con el modelo de lógica para gestionar la selección de recarga *@
+@page
 @model Metro_Procesos.Pages.RecargaSaldoModel
 @{
     ViewData["Title"] = "Metro de Quito - Métodos de Recarga";
 }
 
 <div class="container mt-5">
+    @* 2. Estructura visual: Tarjeta con ancho máximo de 700px, centrada y con borde superior rojo institucional *@
     <div class="card shadow-lg p-4 mx-auto rounded"
          style="max-width:700px; background-color:#ffffff; border-top:8px solid #e60000; position: relative;">
 
+        @* 3. Botón de Regreso: Posicionamiento absoluto para ubicarlo en la esquina superior izquierda *@
         <div style="position:absolute; top:10px; left:10px;">
             <a href="javascript:window.history.back();" class="d-inline-block">
-                    <img src="https://i.pinimg.com/564x/35/b3/c1/35b3c1ecf233d242dc8d504203eebeec.jpg"
+                <img src="https://i.pinimg.com/564x/35/b3/c1/35b3c1ecf233d242dc8d504203eebeec.jpg"
                      alt="Volver"
                      class="img-fluid rounded-circle shadow-sm"
                      style="width:40px; height:40px; cursor:pointer;">
@@ -19,9 +22,11 @@
 
         <h2 class="text-center text-danger fw-bold mb-4">Seleccione su Método de Pago</h2>
 
+        @* 4. Formulario de Selección: Captura la opción elegida mediante un grupo de Radio Buttons *@
         <form method="post">
             <div class="row text-center justify-content-center">
 
+                @* 5. Opción 1 - Transferencia: Vincula la imagen con el input mediante el atributo 'for' *@
                 <div class="col-md-5 mb-4">
                     <label for="transferencia" style="cursor:pointer;">
                         <img src="https://cdn.worldvectorlogo.com/logos/banco-pichincha-nuevo-logo-fondo-amarillo.svg"
@@ -30,6 +35,7 @@
                              style="max-height:120px; width: 100%; object-fit: contain;">
                     </label>
                     <div class="form-check d-flex justify-content-center align-items-center">
+                        @* asp-for="Metodo" vincula el valor "Transferencia" a la propiedad Metodo en el C# *@
                         <input class="form-check-input border-danger" type="radio" asp-for="Metodo" value="Transferencia" id="transferencia" required>
                         <label class="form-check-label fw-semibold text-danger ms-2" for="transferencia">
                             Transferencia
@@ -37,6 +43,7 @@
                     </div>
                 </div>
 
+                @* 6. Opción 2 - Tarjeta: Permite elegir pago con plástico mediante un input tipo radio *@
                 <div class="col-md-5 mb-4">
                     <label for="tarjeta" style="cursor:pointer;">
                         <img src="https://micuenta.pichincha.com/onb-mfa-login/8c20d69b26237c1a39ba.png"
@@ -54,6 +61,7 @@
 
             </div>
 
+            @* 7. Confirmación: Botón de tipo submit para procesar la opción seleccionada en el servidor *@
             <button type="submit" class="btn w-100 fw-bold mt-4"
                     style="background-color:#e60000; color:#fff;">
                 Confirmar Método de Pago

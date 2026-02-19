@@ -1,4 +1,5 @@
-﻿@page
+﻿@* 1. Directivas de Razor: Define esta página como la principal (Index) y la vincula con IndexModel *@
+@page
 @model IndexModel
 @{
     ViewData["Title"] = "Metro de Quito - Login";
@@ -6,9 +7,10 @@
 
 <div class="container mt-5">
     <div class="row justify-content-center">
+        @* 2. Tarjeta de Login: Centrada (col-md-5) con fondo blanco y el borde rojo superior de identidad corporativa *@
         <div class="col-md-5 card shadow p-4 rounded" style="background-color:#ffffff; border-top:8px solid #e60000;">
 
-            <!-- Imagen superior -->
+            @* 3. Branding: Espacio para el logo institucional del Metro de Quito *@
             <div class="text-center mb-3222">
                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStHdLUoa6oD5NevbIz_Ss9mJg6Siu03iy1MQ&s" alt="Logo Metro de Quito"
                      class="img-fluid" style="max-height:120px;">
@@ -16,25 +18,27 @@
 
             <h2 class="text-center mb-4 text-danger fw-bold">Iniciar sesión</h2>
 
-           
-
+            @* 4. Formulario de Autenticación: Envía los datos al servidor mediante POST *@
             <form method="post">
+                @* 5. Campo Correo: Vinculado a la propiedad 'Correo' del modelo C#. El tipo 'email' valida el formato automáticamente *@
                 <div class="mb-3">
                     <label class="form-label text-danger fw-semibold">Correo electrónico</label>
                     <input type="email" asp-for="Correo" class="form-control border-danger" placeholder="usuario@correo.com" required>
                 </div>
 
+                @* 6. Campo Contraseña: El tipo 'password' oculta los caracteres para proteger la privacidad del usuario *@
                 <div class="mb-3">
                     <label class="form-label text-danger fw-semibold">Contraseña</label>
                     <input type="password" asp-for="Contrasena" class="form-control border-danger" required>
                 </div>
 
+                @* 7. Acciones del Formulario: Botones con diseño de bloque (d-grid) para facilitar el clic en móviles *@
                 <div class="d-grid gap-2">
                     <button type="submit" class="btn" style="background-color:#e60000; color:#fff; font-weight:bold;">
                         Iniciar sesión
                     </button>
 
-                    @* <a asp-page="/Recuperar" class="btn btn-outline-danger fw-semibold">Recuperar contraseña</a> *@
+                    @* 8. Navegación: Enlace hacia la página de Registro mediante Tag Helpers (asp-page) *@
                     <a asp-page="/Registro" class="btn btn-light text-danger fw-semibold border border-danger">Registrarse</a>
                 </div>
             </form>
