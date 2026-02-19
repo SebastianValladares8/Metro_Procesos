@@ -1,20 +1,66 @@
-﻿@* 1. Directivas de Razor: Vinculación con el modelo que procesa la validación de transferencia y generación de QR *@
-@page
+﻿@page
 @model Metro_Procesos.Pages.ConfirmarTransferenciaModel
 @{
-    ViewData["Title"] = "Confirmar Pago - Metro de Quito";
+    ViewData["Title"] = "Factura de Viaje - Metro de Quito";
 }
+
+<style>
+    /* --- CONFIGURACIÓN DE ESTILOS PARA FACTURA ELECTRÓNICA --- */
+    /* Fuente monoespaciada para imitar documentos contables oficiales */
+    .factura-container {
+        font-family: 'Courier New', Courier, monospace;
+        background-color: #fff;
+        border: 1px solid #333;
+        padding: 30px;
+        color: #000;
+        max-width: 600px;
+        margin: auto;
+    }
+
+    /* Línea divisoria superior del encabezado */
+    .factura-header {
+        border-bottom: 2px solid #000;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+    }
+
+    /* Recuadro derecho que contiene datos legales como el RUC */
+    .ruc-box {
+        border: 1px solid #000;
+        padding: 10px;
+        text-align: center;
+        font-size: 0.85rem;
+    }
+
+    /* --- REGLAS DE IMPRESIÓN --- */
+    /* Estas instrucciones ocultan elementos innecesarios al generar el PDF */
+    @@media print {
+        .no-print {
+            display: none !important;
+        }
+
+        .factura-container {
+            border: none;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        body {
+            background: white;
+        }
+    }
+</style>
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-md-8">
 
-            @* 2. Lógica Condicional (Renderizado Dinámico): 
-               Si no existe una imagen QR, muestra el formulario de validación. 
-               Si el QR ya se generó, muestra el boleto digital. *@
+            @* LÓGICA DE RENDERIZADO CONDICIONAL:
+               Estado A: Formulario de ingreso de datos si el QR no ha sido generado.
+               Estado B: Visualización de la factura si el proceso fue exitoso.
+            *@
             @if (string.IsNullOrEmpty(Model.QrCodeImage))
             {
-                @* ESTADO A: Formulario de ingreso de comprobante *@
                 <div class="card shadow-lg p-4 rounded" style="border-top:8px solid #e60000;">
                     <h2 class="text-center mb-4 text-danger fw-bold">Confirmación de Transferencia</h2>
 
@@ -24,25 +70,22 @@
                         <p class="mb-1"><strong>Banco:</strong> Banco Pichincha (Cta. Corriente)</p>
                         <p class="mb-1"><strong>Número:</strong> 2100012345</p>
                         <p class="mb-1"><strong>Beneficiario:</strong> Metro de Quito EP</p>
-                        <p class="mb-0"><strong>RUC:</strong> 1768154260001</p>
                     </div>
 
                     <form method="post">
-                        @* Campo de Monto: 'readonly' porque el valor del pasaje es fijo ($0.45) *@
                         <div class="mb-3">
                             <label class="form-label fw-bold">Monto a Pagar ($)</label>
                             <input asp-for="Monto" class="form-control" value="0.45" readonly />
                         </div>
 
-                        @* Captura del número de comprobante para auditoría posterior *@
                         <div class="mb-3">
                             <label class="form-label fw-bold">Número de Referencia / Comprobante</label>
                             <input asp-for="Referencia" class="form-control" placeholder="Ej: 123456789" required />
-                            <div class="form-text">Ingrese el número que aparece en su comprobante bancario.</div>
+                            <div class="form-text text-muted small">Ingrese el número de su transacción bancaria.</div>
                         </div>
 
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-danger btn-lg fw-bold">Validar y Generar QR</button>
+                            <button type="submit" class="btn btn-danger btn-lg fw-bold">Validar y Generar Factura</button>
                             <a asp-page="/MetodosPagoCompra" class="btn btn-outline-secondary">Cancelar</a>
                         </div>
                     </form>
@@ -50,55 +93,75 @@
             }
             else
             {
-                @* ESTADO B: Visualización del Boleto Digital (Ticket) *@
-                <div id="ticket-metro" class="mx-auto shadow-lg mb-4" style="max-width: 350px; background: #fff; border-radius: 20px; overflow: hidden; border: 1px solid #eee;">
+                @* COMPROBANTE DE PAGO ELECTRÓNICO (FACTURA) *@
+                <div id="factura-area" class="factura-container shadow-sm">
 
-                    @* Encabezado del ticket con estilo de impresión térmica *@
-                    <div style="background-color: #e60000; padding: 20px; color: white; text-align: center;">
-                        <h4 class="mb-0 fw-bold">METRO DE QUITO</h4>
-                        <p class="small mb-0 opacity-75">SISTEMA DE TRANSPORTE MUNICIPAL</p>
+                    <div class="row factura-header align-items-center">
+                        <div class="col-7">
+                            <h5 class="fw-bold m-0">EMPRESA PÚBLICA METRO DE QUITO</h5>
+                            <small class="d-block text-muted">Quito - Ecuador</small>
+                        </div>
+                        <div class="col-5">
+                            <div class="ruc-box">
+                                <span class="fw-bold">R.U.C.: 1760000000001</span><br>
+                                <span class="fw-bold">COMPROBANTE ELECTRÓNICO</span><br>
+                                <span>No. 001-003-@DateTime.Now.Ticks.ToString().Substring(12)</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="p-4 text-center">
-                        @* 3. Imagen del QR: Generada en el servidor y pasada como una cadena Base64 o URL *@
-                        <div class="mb-3">
-                            <img src="@Model.QrCodeImage" class="img-thumbnail" style="width: 200px; border: none;" />
-                        </div>
+                    <div class="mb-4 small">
+                        <p class="m-0 text-uppercase"><strong>CLIENTE:</strong> @Model.UsuarioNombre</p>
+                        <p class="m-0"><strong>REFERENCIA:</strong> @Model.Referencia</p>
+                        <p class="m-0"><strong>FECHA EMISIÓN:</strong> @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</p>
+                    </div>
 
-                        @* 4. Detalles del Viaje: Muestra información dinámica del pasajero y la transacción *@
-                        <div class="text-start border-top pt-3 mt-3">
-                            <div class="d-flex justify-content-between mb-1">
-                                <span class="text-muted small">PASAJERO:</span>
-                                <span class="fw-bold small text-uppercase">@Model.UsuarioNombre</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-1">
-                                <span class="text-muted small">REFERENCIA:</span>
-                                <span class="fw-bold small">@Model.Referencia</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-1">
-                                <span class="text-muted small">FECHA:</span>
-                                <span class="fw-bold small">@DateTime.Now.ToString("dd/MM/yyyy HH:mm")</span>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <span class="text-muted small">TIPO:</span>
-                                <span class="fw-bold text-danger small">TICKET SENCILLO - $0.45</span>
-                            </div>
-                        </div>
+                    <table class="table table-sm border-dark small mb-4">
+                        <thead>
+                            <tr class="border-bottom border-dark">
+                                <th>DESCRIPCIÓN</th>
+                                <th class="text-end">CANT.</th>
+                                <th class="text-end">TOTAL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>TICKET DE VIAJE - METRO</td>
+                                <td class="text-end">1.00</td>
+                                <td class="text-end">0.45</td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                        @* Línea punteada decorativa para simular ticket físico *@
-                        <div class="my-3" style="border-top: 2px dashed #ddd;"></div>
-                        <p class="text-muted mb-0" style="font-size: 0.65rem;">Escanee este código en los validadores de la estación.</p>
+                    <div class="row align-items-center">
+                        <div class="col-6 text-center border-end border-dark">
+                            @* Imagen QR generada en el servidor *@
+                            <img src="@Model.QrCodeImage" style="width: 150px;" class="mb-2 border p-1" />
+                            <p class="fw-bold m-0" style="font-size: 0.7rem;">CÓDIGO QR DE ACCESO</p>
+                        </div>
+                        <div class="col-6 text-end small">
+                            <p class="m-0">SUBTOTAL: $0.40</p>
+                            <p class="m-0">IVA 15%: $0.05</p>
+                            <h5 class="fw-bold mt-2 pt-2 border-top border-dark">TOTAL: $0.45</h5>
+                        </div>
                     </div>
                 </div>
 
-                @* 5. Acciones Finales: Opciones para descargar, imprimir o volver al perfil *@
-                <div class="d-grid gap-2 mx-auto" style="max-width: 350px;">
-                    @* Botón de descarga: Permite guardar la imagen del QR directamente en el dispositivo *@
-                    <a href="@Model.QrCodeImage" download="Boleto_Metro_Quito_@(Model.Referencia).png" class="btn btn-danger btn-lg fw-bold">Descargar Boleto</a>
+                @* BOTONES DE ACCIÓN *@
+                <div class="text-center mt-4 no-print d-grid gap-2 mx-auto" style="max-width: 400px;">
+                    @* Abre el gestor de impresión para obtener el PDF *@
+                    <button onclick="window.print()" class="btn btn-dark fw-bold btn-lg shadow">
+                        Imprimir / Guardar Factura PDF
+                    </button>
 
-                    @* Uso de JavaScript nativo para abrir el diálogo de impresión del sistema *@
-                    <button onclick="window.print()" class="btn btn-outline-dark">Imprimir Ticket</button>
-                    <a asp-page="/Usuario" class="btn btn-link text-muted">Ir a mi Perfil</a>
+                    @* CORRECCIÓN DEL ERROR CS1061: 
+                       Se usa un nombre estático para el archivo de descarga. 
+                       Esto evita que Razor intente procesar ".png" como código C#. *@
+                    <a href="@Model.QrCodeImage" download="Boleto_Metro_Quito.png" class="btn btn-outline-danger">
+                        Descargar Código QR
+                    </a>
+
+                    <a asp-page="/Usuario" class="btn btn-link text-muted mt-2">Finalizar</a>
                 </div>
             }
         </div>

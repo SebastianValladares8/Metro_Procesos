@@ -11,50 +11,41 @@ namespace Metro_Procesos.Pages
         private readonly AppDbContext _context;
         public CompraBoletoSaldoModel(AppDbContext context) { _context = context; }
 
+        // Propiedades requeridas por la vista .cshtml
         public string QrCodeImage { get; set; }
         public string UsuarioNombre { get; set; }
         public decimal SaldoRestante { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
-            // 1. Validar Sesión
             var usuarioId = HttpContext.Session.GetInt32("UsuarioId");
-            if (usuarioId == null) return RedirectToPage("/Index");
+            if (usuarioId == null) return RedirectToPage("/Login");
 
-            // 2. Buscar Usuario y procesar cobro
             var usuario = await _context.usuario.FirstOrDefaultAsync(u => u.Id == usuarioId);
 
-            if (usuario != null)
+            // Verificamos si tiene saldo suficiente ($0.45)
+            if (usuario != null && usuario.Saldo >= 0.45m)
             {
-                if (usuario.Saldo >= 0.45m)
+                // 1. Proceso de cobro
+                usuario.Saldo -= 0.45m;
+                await _context.SaveChangesAsync();
+
+                // 2. Preparar datos para la factura
+                UsuarioNombre = usuario.Nombre;
+                SaldoRestante = usuario.Saldo;
+
+                // 3. Generar el QR
+                using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+                using (QRCodeData qrCodeData = qrGenerator.CreateQrCode($"METRO|{usuario.Nombre}|{DateTime.Now}", QRCodeGenerator.ECCLevel.Q))
+                using (PngByteQRCode qrCode = new PngByteQRCode(qrCodeData))
                 {
-                    // RESTAR SALDO Y GUARDAR
-                    usuario.Saldo -= 0.45m;
-                    await _context.SaveChangesAsync();
-
-                    UsuarioNombre = usuario.Nombre;
-                    SaldoRestante = usuario.Saldo;
-
-                    // 3. GENERAR QR
-                    string datosQR = $"METRO|SALDO|USER:{usuario.Nombre}|FECHA:{DateTime.Now:yyyyMMddHHmm}";
-                    using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
-                    using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(datosQR, QRCodeGenerator.ECCLevel.Q))
-                    using (PngByteQRCode qrCode = new PngByteQRCode(qrCodeData))
-                    {
-                        byte[] qrBytes = qrCode.GetGraphic(20);
-                        QrCodeImage = $"data:image/png;base64,{Convert.ToBase64String(qrBytes)}";
-                    }
-
-                    return Page();
+                    byte[] qrBytes = qrCode.GetGraphic(20);
+                    QrCodeImage = $"data:image/png;base64,{Convert.ToBase64String(qrBytes)}";
                 }
-                else
-                {
-                    // Si no tiene saldo, lo enviamos a recargar
-                    TempData["Mensaje"] = "Saldo insuficiente para comprar el boleto.";
-                    return RedirectToPage("/RecargaSaldo");
-                }
+                return Page();
             }
-            return RedirectToPage("/Index");
+
+            return RedirectToPage("/Usuario");
         }
     }
 }
